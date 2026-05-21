@@ -799,12 +799,16 @@ function addChip() {
   autoSave();
 }
 function addPeriod() {
-  const col = document.getElementById('sh-periods');
-  const add = col.querySelector('.period-add-btn');
-  const box = document.createElement('div'); box.className = 'period-card';
-  box.innerHTML = '<div class="period-card-lbl" contenteditable>기간 이름</div><div class="period-card-date" contenteditable>날짜 입력</div><button class="period-del" onclick="this.closest('.period-card').remove()">×</button>';
+  const col = document.getElementById("sh-periods");
+  const add = col.querySelector(".period-add-btn");
+  const box = document.createElement("div");
+  box.className = "period-card";
+  const lbl = document.createElement("div"); lbl.className="period-card-lbl"; lbl.contentEditable="true"; lbl.textContent="기간 이름";
+  const dt = document.createElement("div"); dt.className="period-card-date"; dt.contentEditable="true"; dt.textContent="날짜 입력";
+  const btn = document.createElement("button"); btn.className="period-del"; btn.textContent="x"; btn.onclick=function(){this.closest(".period-card").remove();};
+  box.appendChild(lbl); box.appendChild(dt); box.appendChild(btn);
   col.insertBefore(box, add);
-  box.querySelector('.period-card-lbl').focus();
+  lbl.focus();
   autoSave();
 }
 
