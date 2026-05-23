@@ -855,7 +855,14 @@ body.readonly-mode [contenteditable]{pointer-events:none;}
 
 <!-- ── 툴바 ── -->
 <div class="toolbar">
-  <div class="tb-logo">기획서 에디터</div>
+  <!-- 왼쪽: 로고 + 참여자 -->
+  <div class="tb-left">
+    <div class="tb-logo">기획서</div>
+    <button class="me-badge" id="me-badge" onclick="openNameModal()" title="참여자 변경">나</button>
+    <div class="editors-bar" id="editors-bar"></div>
+    <div class="sync-badge local" id="sync-badge"><div class="sync-dot"></div><span id="sync-txt">로컬</span></div>
+  </div>
+  <!-- 가운데: 모드·언어 -->
   <div class="tb-center">
     <div class="pill-group">
       <button class="pill-btn active" id="btn-edit" onclick="setMode('edit')">편집</button>
@@ -865,38 +872,50 @@ body.readonly-mode [contenteditable]{pointer-events:none;}
       <button class="lang-btn ko active" id="lang-ko" onclick="setLang('ko')">KO</button>
       <button class="lang-btn ja" id="lang-ja" onclick="setLang('ja')">JA</button>
     </div>
-    <!-- 동기화 상태 -->
-    <div class="sync-badge local" id="sync-badge">
-      <div class="sync-dot"></div>
-      <span id="sync-txt">로컬 모드</span>
-    </div>
-    <!-- 현재 편집자들 -->
-    <div class="editors-bar" id="editors-bar"></div>
-    <button class="me-badge" id="me-badge" onclick="openNameModal()" title="참여자 변경"></button>
     <div class="search-wrap" id="search-wrap">
       <span class="search-icon">⌕</span>
       <input class="search-inp" id="search-inp" placeholder="검색..." oninput="doSearch(this.value)" onkeydown="if(event.key==='Escape')toggleSearch()">
       <input class="search-replace-inp" id="replace-inp" placeholder="바꾸기..." onkeydown="if(event.key==='Enter')doReplace()">
-      <button class="search-mini-btn" onclick="doReplace()" title="바꾸기">→</button>
-      <button class="search-mini-btn" onclick="toggleSearch()" title="닫기">✕</button>
+      <button class="search-mini-btn" onclick="doReplace()">→</button>
+      <button class="search-mini-btn" onclick="toggleSearch()">✕</button>
     </div>
   </div>
+  <!-- 오른쪽: 주요 액션만 -->
   <div class="tb-right">
-    <button class="icon-btn always-show" onclick="toggleToc()" title="목차">☰</button>
-    <button class="icon-btn always-show" onclick="toggleSearch()">⌕</button>
-    <button class="icon-btn edit-only-tb" onclick="toggleAiPanel()" title="AI 어시스턴트">✨ AI</button>
-    <button class="icon-btn" onclick="openShareModal()">🔗 공유</button>
-    <button class="icon-btn" onclick="openPresent()">▶</button>
-    <button class="icon-btn" onclick="openHistory()">⏱</button>
-    <button class="icon-btn" onclick="document.getElementById('json-file').click()" title="JSON 불러오기">↑</button>
-    <button class="icon-btn" onclick="exportJSON()" title="JSON 내보내기">↓</button>
-    <button class="icon-btn" onclick="exportMarkdown()" title="Markdown 내보내기">📝</button>
-    <button class="icon-btn" onclick="copyForNotion()" title="Notion/Slack 복사">📋</button>
-    <button class="icon-btn" onclick="toggleDarkMode()" title="다크모드">🌙</button>
-    <button class="icon-btn" onclick="openThemeModal()" title="테마 색상">🎨</button>
-    <button class="icon-btn red edit-only-tb" onclick="openResetModal()" title="기획서 초기화">↺ 초기화</button>
+    <button class="icon-btn tb-icon-only" onclick="toggleSearch()" title="검색">⌕</button>
+    <button class="icon-btn tb-icon-only" onclick="toggleToc()" title="목차">☰</button>
+    <button class="icon-btn" onclick="openShareModal()">공유</button>
+    <button class="icon-btn" onclick="openPresent()" title="발표">▶</button>
     <button class="icon-btn green" onclick="printPDF()">PDF</button>
-    <button class="icon-btn mobile-menu-btn always-show" onclick="toggleMobileMenu()" style="display:none">⋯</button>
+    <!-- 더보기 -->
+    <div class="tb-more-wrap">
+      <button class="icon-btn tb-icon-only" onclick="toggleMoreMenu()" id="more-btn" title="더보기">⋯</button>
+      <div class="tb-more-menu" id="tb-more-menu">
+        <div class="more-section-lbl">작업 상태</div>
+        <button class="more-item" onclick="openProjectsPanel();closeMoreMenu()">📁 작업 상태</button>
+        <button class="more-item" onclick="openVersionHistory();closeMoreMenu()">🕐 버전 히스토리</button>
+        <div class="more-sep"></div>
+        <div class="more-section-lbl">편집</div>
+        <button class="more-item" onclick="toggleCommentMode();closeMoreMenu()">💬 코멘트 핀</button>
+        <button class="more-item" onclick="openColorPanel();closeMoreMenu()">🎨 컬러 팔레트</button>
+        <button class="more-item" onclick="openBannerPresetModal();closeMoreMenu()">📐 배너 Preset</button>
+        <button class="more-item" onclick="openStickerPanel();closeMoreMenu()">🏷 스티커</button>
+        <div class="more-sep"></div>
+        <div class="more-section-lbl">내보내기</div>
+        <button class="more-item" onclick="exportMarkdown();closeMoreMenu()">📝 Markdown 저장</button>
+        <button class="more-item" onclick="copyForNotion();closeMoreMenu()">📋 Notion 복사</button>
+        <button class="more-item" onclick="exportJSON();closeMoreMenu()">↓ JSON 저장</button>
+        <button class="more-item" onclick="document.getElementById('json-file').click();closeMoreMenu()">↑ JSON 불러오기</button>
+        <div class="more-sep"></div>
+        <div class="more-section-lbl">설정</div>
+        <button class="more-item" onclick="openHistory();closeMoreMenu()">⏱ 수정 이력</button>
+        <button class="more-item" onclick="toggleDarkMode();closeMoreMenu()">🌙 다크모드</button>
+        <button class="more-item" onclick="openThemeModal();closeMoreMenu()">🎨 테마 색상</button>
+        <button class="more-item danger" onclick="openResetModal();closeMoreMenu()">↺ 초기화</button>
+      </div>
+    </div>
+    <!-- 모바일 햄버거 -->
+    <button class="icon-btn mobile-menu-btn" onclick="toggleMobileMenu()" style="display:none">☰</button>
   </div>
 </div>
 
@@ -1000,7 +1019,7 @@ body.readonly-mode [contenteditable]{pointer-events:none;}
    사용자 / 세션 관리
 ═══════════════════════════════════════ */
 const USER_COLORS = ['#4F6BED','#10B981','#EF4444','#F59E0B','#8B5CF6','#EC4899','#06B6D4','#84CC16'];
-let myUser = JSON.parse(localStorage.getItem('kiedit-user') || 'null');
+let myUser = JSON.parse(sessionStorage.getItem('kiedit-user') || 'null');
 if (!myUser) {
   myUser = {
     id: 'u_' + Date.now() + '_' + Math.random().toString(36).slice(2,6),
@@ -1028,14 +1047,14 @@ function confirmName() {
   const n = document.getElementById('name-inp').value.trim();
   if (!n) { toast('이름을 입력해주세요'); return; }
   myUser.name = n;
-  localStorage.setItem('kiedit-user', JSON.stringify(myUser));
+  sessionStorage.setItem('kiedit-user', JSON.stringify(myUser));
   document.getElementById('name-modal').classList.remove('open');
   initFirebase();
 }
 
 function skipName() {
   myUser.name = '익명';
-  localStorage.setItem('kiedit-user', JSON.stringify(myUser));
+  sessionStorage.setItem('kiedit-user', JSON.stringify(myUser));
   document.getElementById('name-modal').classList.remove('open');
   initFirebase();
 }
@@ -2103,700 +2122,230 @@ document.getElementById('main').addEventListener('input',()=>{
 
 </body>
 </html>
+<style>
+/* ── 툴바 재설계 ── */
+.tb-left{display:flex;align-items:center;gap:6px;flex-shrink:0;}
+.tb-right{display:flex;align-items:center;gap:4px;flex-shrink:0;}
+.tb-center{display:flex;align-items:center;gap:6px;flex:1;justify-content:center;}
+.tb-logo{font-size:14px;font-weight:700;color:var(--dark);white-space:nowrap;}
+.me-badge{background:var(--accent);color:#fff;border:none;border-radius:20px;padding:3px 10px;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap;max-width:100px;overflow:hidden;text-overflow:ellipsis;}
+.sync-badge{font-size:10px;padding:3px 7px;}
+.tb-icon-only{padding:0 8px!important;min-width:32px;}
+
+/* 더보기 드롭다운 */
+.tb-more-wrap{position:relative;}
+.tb-more-menu{display:none;position:absolute;right:0;top:calc(100%+6px);background:var(--white);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shm);min-width:180px;padding:6px;z-index:500;}
+.tb-more-menu.open{display:block;}
+.more-item{display:block;width:100%;text-align:left;padding:8px 10px;border:none;background:none;font-size:13px;color:var(--dark);cursor:pointer;border-radius:7px;font-family:inherit;transition:background .1s;}
+.more-item:hover{background:var(--g1);}
+.more-item.danger{color:var(--red);}
+.more-sep{height:1px;background:var(--border);margin:4px 0;}
+.more-section-lbl{font-size:10px;font-weight:700;color:var(--g3);padding:4px 10px 2px;letter-spacing:.06em;text-transform:uppercase;}
+
+/* ── 탭 드래그 정렬 ── */
+.nav-tab.tab-drag-over-left{border-left:2px solid var(--accent);}
+.nav-tab.tab-drag-over-right{border-right:2px solid var(--accent);}
+.nav-tab[draggable=true]{cursor:grab;}
+.nav-tab[draggable=true]:active{cursor:grabbing;}
+
+/* ── PDF 전용 — 전체보기 기준 전체 출력 ── */
+@media print {
+  .toolbar,.nav,.card-acts,.add-card-btn,.drop-zone,.img-del-btn,
+  .link-add-btn,.link-del,.modal-bg,.fmt-bar,.history-panel,
+  .present-overlay,.toast,.free-add-row,.prd-grid-add,.ref-grid-del,
+  .edit-only,.add-row-btn,.row-del,.free-block-del,.prd-grid-del,
+  .img-fit-row,.conflict-bar,.user-cursors,.sync-badge,.toc-sidebar,
+  .toc-overlay,.ai-panel,.readonly-banner,.toc-overlay,
+  .color-panel,.sticker-panel,.version-panel,.projects-panel,
+  .tb-more-menu { display:none!important; }
+  body { background:#fff!important; }
+  html,body { height:auto!important; overflow:visible!important; }
+  .main { padding:0!important; height:auto!important; overflow:visible!important; }
+  /* 전체보기 섹션만 표시 */
+  .section { display:none!important; }
+  .section#all { display:block!important; }
+  .card { box-shadow:none!important; break-inside:avoid; page-break-inside:avoid; }
+  .card-wrap { break-inside:avoid; page-break-inside:avoid; }
+  .ov-div { break-before:auto; }
+  * { -webkit-print-color-adjust:exact!important; print-color-adjust:exact!important; }
+}
+
+/* ── 모바일 레이아웃 개선 ── */
+@media(max-width:768px){
+  .toolbar{padding:0 10px;gap:4px;height:48px;}
+  .tb-center{display:none;}  /* 모바일에서 가운데 영역 숨김 */
+  .tb-left{gap:4px;}
+  .sync-badge{display:none;}
+  .editors-bar{display:none;}
+  .me-badge{max-width:70px;font-size:10px;padding:2px 7px;}
+  .tb-logo{font-size:13px;}
+  /* 모바일에서 더보기 메뉴 full-width */
+  .tb-more-menu{right:-10px;min-width:220px;}
+  /* 공유·PDF 숨기고 더보기로 */
+  .tb-right > .icon-btn:not(.tb-icon-only):not(.mobile-menu-btn){display:none;}
+  .tb-right > .icon-btn.tb-icon-only{display:flex;}
+  /* 단, 모바일 햄버거는 표시 */
+  .tb-right > .mobile-menu-btn{display:flex!important;}
+  .tb-right > .tb-more-wrap{display:none;} /* 모바일엔 하단메뉴 사용 */
+
+  .site-header{padding:14px 12px 12px;}
+  .sh-top{flex-direction:column;gap:10px;}
+  .sh-right{flex-direction:row;flex-wrap:wrap;}
+  .period-card{min-width:0;flex:1;}
+  .sh-title{font-size:clamp(16px,5vw,22px);}
+  .main{padding:10px 8px 80px;}
+  .card{padding:12px;}
+  .prd-a{flex-direction:column;}
+  .prd-a-img{width:100%;}
+  .picker-grid{grid-template-columns:repeat(3,1fr);}
+  .nav{top:48px;padding:0 4px;overflow-x:auto;-webkit-overflow-scrolling:touch;}
+  .nav::-webkit-scrollbar{display:none;}
+  .toc-sidebar{padding-top:48px;}
+  /* 모바일 하단 메뉴 개선 */
+  .mobile-menu{
+    display:none;position:fixed;bottom:0;left:0;right:0;
+    background:var(--white);border-top:1px solid var(--border);
+    padding:12px 16px 24px;z-index:250;
+    display:none;flex-wrap:wrap;gap:8px;
+  }
+  .mobile-menu.open{display:flex;}
+  .share-modal,.reset-modal,.name-modal,.theme-modal{width:min(96vw,400px);}
+
+  /* 카드 섹션 1열로 */
+  .section{padding:0;}
+  .card-wrap{margin-bottom:10px;}
+}
+@media(min-width:769px){
+  .mobile-menu{display:none!important;}
+  .mobile-menu-btn{display:none!important;}
+}
+</style>
+
 <script>
-/* ═══════════════════════════════════════
-   참여자 UX 개선
-═══════════════════════════════════════ */
-function updateMeBadge() {
-  const b = document.getElementById('me-badge');
-  if (!b) return;
-  b.style.cssText = `background:${myUser.color};color:#fff;border:none;border-radius:20px;padding:3px 10px;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;`;
-  b.textContent = '나 : ' + (myUser.name || '익명');
+/* ── 더보기 메뉴 ── */
+function toggleMoreMenu(){
+  document.getElementById('tb-more-menu').classList.toggle('open');
 }
-function openNameModal() {
-  document.getElementById('name-inp').value = myUser.name === '익명' ? '' : (myUser.name || '');
-  document.getElementById('name-modal').classList.add('open');
-  setTimeout(() => document.getElementById('name-inp').focus(), 100);
+function closeMoreMenu(){
+  document.getElementById('tb-more-menu').classList.remove('open');
 }
-// confirmName / skipName 덮어쓰기
-window.confirmName = function() {
-  const n = document.getElementById('name-inp').value.trim();
-  if (!n) { toast('이름을 입력해주세요'); return; }
-  myUser.name = n;
-  localStorage.setItem('kiedit-user', JSON.stringify(myUser));
-  document.getElementById('name-modal').classList.remove('open');
-  updateMeBadge();
-  if (typeof initFirebase === 'function') initFirebase();
-};
-window.skipName = function() {
-  myUser.name = '익명';
-  localStorage.setItem('kiedit-user', JSON.stringify(myUser));
-  document.getElementById('name-modal').classList.remove('open');
-  updateMeBadge();
-  if (typeof initFirebase === 'function') initFirebase();
-};
-updateMeBadge();
-
-/* ═══════════════════════════════════════
-   컬러 시스템 (저장 / 최근 / 즐겨찾기 / HEX 복사 / 브랜드 preset)
-═══════════════════════════════════════ */
-const BRAND_PRESETS = {
-  'Qoo10':   ['#E8001B','#FF6600','#FFD700','#1A237E','#FFFFFF'],
-  'Rakuten': ['#BF0000','#FFFFFF','#333333','#F7A800','#00A0E9'],
-  'Amazon':  ['#FF9900','#232F3E','#37475A','#FEBD69','#FFFFFF'],
-  'Yahoo':   ['#FF0033','#FFFFFF','#1D1D1D','#FF8F00','#006EFF'],
-  'ブランド1': ['#4F6BED','#10B981','#F59E0B','#EF4444','#111827'],
-};
-let recentColors = JSON.parse(localStorage.getItem('kiedit-recent-colors') || '[]');
-let favColors = JSON.parse(localStorage.getItem('kiedit-fav-colors') || '[]');
-
-function addRecentColor(hex) {
-  recentColors = [hex, ...recentColors.filter(c => c !== hex)].slice(0, 10);
-  localStorage.setItem('kiedit-recent-colors', JSON.stringify(recentColors));
-}
-function toggleFavColor(hex) {
-  if (favColors.includes(hex)) favColors = favColors.filter(c => c !== hex);
-  else favColors = [...favColors, hex].slice(0, 20);
-  localStorage.setItem('kiedit-fav-colors', JSON.stringify(favColors));
-}
-
-function openColorPanel() {
-  let panel = document.getElementById('color-panel');
-  if (!panel) {
-    panel = document.createElement('div');
-    panel.id = 'color-panel';
-    panel.className = 'color-panel';
-    document.body.appendChild(panel);
-  }
-  renderColorPanel(panel);
-  panel.classList.toggle('open');
-}
-
-function renderColorPanel(panel) {
-  const sel = window.getSelection();
-  const hasSelection = sel && !sel.isCollapsed;
-  panel.innerHTML = `
-  <div class="cp-hd">🎨 컬러 팔레트<button onclick="this.closest('.color-panel').classList.remove('open')" style="float:right;background:none;border:none;font-size:16px;cursor:pointer;color:var(--g3)">×</button></div>
-  <div class="cp-section-lbl">브랜드 Preset</div>
-  <div class="cp-brand-tabs" id="cp-brand-tabs">
-    ${Object.keys(BRAND_PRESETS).map(b => `<button class="cp-brand-tab" onclick="renderBrandColors('${b}')">${b}</button>`).join('')}
-  </div>
-  <div class="cp-swatches" id="cp-brand-swatches"></div>
-  <div class="cp-section-lbl">최근 사용</div>
-  <div class="cp-swatches" id="cp-recent">${recentColors.map(c => cpSwatch(c)).join('') || '<span style="font-size:11px;color:var(--g3)">없음</span>'}</div>
-  <div class="cp-section-lbl">즐겨찾기</div>
-  <div class="cp-swatches" id="cp-favs">${favColors.map(c => cpSwatch(c, true)).join('') || '<span style="font-size:11px;color:var(--g3)">없음</span>'}</div>
-  <div class="cp-section-lbl">직접 입력</div>
-  <div style="display:flex;gap:6px;align-items:center">
-    <input id="cp-hex-inp" type="color" value="#4F6BED" style="width:36px;height:36px;border:1px solid var(--border);border-radius:6px;padding:2px;cursor:pointer;background:none">
-    <input id="cp-hex-txt" type="text" value="#4F6BED" maxlength="7" placeholder="#RRGGBB" style="flex:1;padding:6px 8px;border:1px solid var(--border);border-radius:6px;font-size:12px;font-family:inherit;outline:none;background:var(--white);color:var(--dark)">
-    <button onclick="applyColorFromPanel()" style="padding:6px 10px;background:var(--accent);color:#fff;border:none;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer">적용</button>
-    <button onclick="copyHex(document.getElementById('cp-hex-txt').value)" style="padding:6px 8px;border:1px solid var(--border);border-radius:6px;background:var(--white);font-size:11px;cursor:pointer;color:var(--dark)">복사</button>
-    <button onclick="toggleFavColor(document.getElementById('cp-hex-txt').value);renderColorPanel(this.closest('.color-panel'))" style="padding:6px 8px;border:1px solid var(--border);border-radius:6px;background:var(--white);font-size:11px;cursor:pointer;color:var(--dark)">★</button>
-  </div>`;
-  const ci = panel.querySelector('#cp-hex-inp');
-  const ct = panel.querySelector('#cp-hex-txt');
-  if (ci && ct) {
-    ci.addEventListener('input', () => { ct.value = ci.value; });
-    ct.addEventListener('input', () => { if (/^#[0-9A-Fa-f]{6}$/.test(ct.value)) ci.value = ct.value; });
-  }
-  renderBrandColors(Object.keys(BRAND_PRESETS)[0], panel);
-}
-
-function cpSwatch(hex, isFav) {
-  const name = hexToColorName(hex);
-  return `<div class="cp-swatch" style="background:${hex}" title="${name} ${hex}" onclick="selectCpColor('${hex}')" ondblclick="copyHex('${hex}')">
-    <span class="cp-hex-lbl">${hex.toUpperCase()}</span>
-    ${isFav ? `<button class="cp-unfav" onclick="event.stopPropagation();toggleFavColor('${hex}');renderColorPanel(this.closest('.color-panel'))" title="즐겨찾기 해제">★</button>` : ''}
-  </div>`;
-}
-
-function renderBrandColors(brand, panel) {
-  panel = panel || document.getElementById('color-panel');
-  if (!panel) return;
-  panel.querySelectorAll('.cp-brand-tab').forEach(b => b.classList.toggle('active', b.textContent === brand));
-  const wrap = panel.querySelector('#cp-brand-swatches');
-  if (wrap) wrap.innerHTML = (BRAND_PRESETS[brand] || []).map(c => cpSwatch(c)).join('');
-}
-
-function selectCpColor(hex) {
-  const ti = document.getElementById('cp-hex-inp');
-  const tt = document.getElementById('cp-hex-txt');
-  if (ti) ti.value = hex;
-  if (tt) tt.value = hex;
-  addRecentColor(hex);
-  renderColorPanel(document.getElementById('color-panel'));
-}
-
-function applyColorFromPanel() {
-  const hex = document.getElementById('cp-hex-txt')?.value || '#000000';
-  addRecentColor(hex);
-  if (savedRange) { const s = window.getSelection(); s.removeAllRanges(); s.addRange(savedRange); }
-  document.execCommand('foreColor', false, hex);
-  triggerSave();
-  toast('컬러 적용: ' + hex);
-}
-
-function copyHex(hex) {
-  navigator.clipboard.writeText(hex).then(() => toast('HEX 복사됨: ' + hex));
-}
-
-const COLOR_NAMES = {
-  '#ff0000':'레드','#ee0000':'레드','#cc0000':'다크레드','#bf0000':'다크레드','#e8001b':'레드',
-  '#ff9900':'오렌지','#ff6600':'오렌지','#f7a800':'앰버','#ffd700':'골드','#f59e0b':'앰버',
-  '#10b981':'그린','#00a0e9':'스카이블루','#4f6bed':'블루','#1a237e':'네이비','#006eff':'블루',
-  '#8b5cf6':'퍼플','#ec4899':'핑크','#ffffff':'화이트','#000000':'블랙',
-  '#1d1d1d':'다크','#232f3e':'다크네이비','#333333':'다크그레이','#37475a':'슬레이트',
-};
-function hexToColorName(hex) {
-  return COLOR_NAMES[hex.toLowerCase()] || hex;
-}
-
-/* ═══════════════════════════════════════
-   배너 사이즈 Preset
-═══════════════════════════════════════ */
-const BANNER_PRESETS = {
-  'Qoo10': [
-    {name:'메인배너',w:1200,h:400},{name:'상품배너',w:800,h:800},
-    {name:'띠배너',w:1200,h:120},{name:'모바일 메인',w:750,h:300},
-  ],
-  'Rakuten': [
-    {name:'ヘッダー',w:1600,h:200},{name:'商品',w:540,h:540},
-    {name:'メインバナー',w:1600,h:500},{name:'スマホ',w:750,h:280},
-  ],
-  'Amazon': [
-    {name:'Hero',w:3000,h:600},{name:'商品メイン',w:1000,h:1000},
-    {name:'ブランドストーリー',w:1464,h:600},{name:'モバイル',w:750,h:300},
-  ],
-  'Yahoo': [
-    {name:'トップ',w:1366,h:400},{name:'商品',w:640,h:640},
-    {name:'帯バナー',w:1366,h:100},{name:'スマホ',w:750,h:300},
-  ],
-  '유형별': [
-    {name:'메인배너',w:1200,h:400},{name:'띠배너',w:1200,h:120},
-    {name:'카드형',w:600,h:600},{name:'리뷰형',w:800,h:400},
-    {name:'할인형',w:800,h:800},{name:'정사각',w:800,h:800},
-  ],
-};
-
-function openBannerPresetModal() {
-  let m = document.getElementById('banner-preset-modal');
-  if (!m) {
-    m = document.createElement('div');
-    m.id = 'banner-preset-modal';
-    m.style.cssText = 'display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:2200;align-items:center;justify-content:center;';
-    m.innerHTML = `<div style="background:var(--white);border-radius:16px;padding:22px 20px;width:min(480px,94vw);max-height:85vh;overflow-y:auto;box-shadow:var(--shm)">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
-        <div style="font-size:15px;font-weight:700;color:var(--dark)">📐 배너 사이즈 Preset</div>
-        <button onclick="this.closest('#banner-preset-modal').style.display='none'" style="background:none;border:none;font-size:18px;cursor:pointer;color:var(--g3)">×</button>
-      </div>
-      <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px" id="bpm-tabs">
-        ${Object.keys(BANNER_PRESETS).map(k=>`<button class="cp-brand-tab" onclick="renderBannerPresets('${k}')">${k}</button>`).join('')}
-      </div>
-      <div id="bpm-list"></div>
-    </div>`;
-    document.body.appendChild(m);
-  }
-  m.style.display = 'flex';
-  renderBannerPresets('유형별');
-}
-
-function renderBannerPresets(brand) {
-  const m = document.getElementById('banner-preset-modal');
-  if (!m) return;
-  m.querySelectorAll('.cp-brand-tab').forEach(b => b.classList.toggle('active', b.textContent === brand));
-  const list = m.querySelector('#bpm-list');
-  list.innerHTML = (BANNER_PRESETS[brand] || []).map(p =>
-    `<div onclick="insertBannerSizeCard('${p.name}',${p.w},${p.h})" style="display:flex;justify-content:space-between;align-items:center;padding:10px 12px;border:1px solid var(--border);border-radius:10px;cursor:pointer;margin-bottom:7px;transition:all .15s" onmouseenter="this.style.borderColor='var(--accent)'" onmouseleave="this.style.borderColor='var(--border)'">
-      <div style="font-size:13px;font-weight:600;color:var(--dark)">${p.name}</div>
-      <div style="font-size:12px;color:var(--g3);font-weight:600">${p.w} × ${p.h} px</div>
-    </div>`
-  ).join('');
-}
-
-function insertBannerSizeCard(name, w, h) {
-  document.getElementById('banner-preset-modal').style.display = 'none';
-  const ratio = Math.min(1, 560 / w);
-  const dw = Math.round(w * ratio); const dh = Math.round(h * ratio);
-  const sec = document.getElementById(pickerSec) || document.querySelector('.section.active');
-  if (!sec) return;
-  const btn = sec.querySelector('.add-card-btn');
-  const inner = `<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
-    <div class="card-label" contenteditable>${name} 배너</div>
-    <span style="font-size:11px;color:var(--g3);background:var(--g1);padding:3px 8px;border-radius:5px;font-weight:600">${w}×${h}px</span>
-  </div>
-  <div class="banner-safe-wrap" style="position:relative;width:${dw}px;height:${dh}px;border:1.5px dashed var(--border);border-radius:6px;overflow:hidden;background:var(--g1);margin:0 auto">
-    ${makeDz ? makeDz('배너 이미지') : '<div class="drop-zone"><span>+</span><span>이미지 추가</span><input type="file" accept="image/*"></div>'}
-    <div class="safe-area-overlay edit-only" style="display:none;position:absolute;inset:${Math.round(dh*.05)}px ${Math.round(dw*.05)}px;border:1.5px dashed rgba(79,107,237,.5);pointer-events:none;border-radius:3px"></div>
-    <div class="mobile-cut-line edit-only" style="display:none;position:absolute;top:0;bottom:0;left:${Math.round(dw*.1)}px;right:${Math.round(dw*.1)}px;border-left:2px solid rgba(239,68,68,.4);border-right:2px solid rgba(239,68,68,.4);pointer-events:none"></div>
-  </div>
-  <div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap" class="edit-only">
-    <button class="fit-btn" onclick="this.closest('.card').querySelector('.safe-area-overlay').style.display=(this.classList.toggle('active')?'block':'none')">Safe Area</button>
-    <button class="fit-btn" onclick="this.closest('.card').querySelector('.mobile-cut-line').style.display=(this.classList.toggle('active')?'block':'none')">모바일 잘림</button>
-    <button class="fit-btn" onclick="checkJapaneseText(this.closest('.card'))">일본어 체크</button>
-    <button class="fit-btn" onclick="checkImageSize(this.closest('.card'))">용량 체크</button>
-    <button class="fit-btn" onclick="exportBannerCard(this.closest('.card'),'${name}',${w},${h})">↓ Export</button>
-  </div>
-  <div class="banner-warn" style="margin-top:6px;font-size:11px;color:var(--red);display:none"></div>`;
-  const wrap = makeCardWrap(inner);
-  if (btn) sec.insertBefore(wrap, btn); else sec.appendChild(wrap);
-  initAllDz && initAllDz(); schedOv && schedOv(); triggerSave && triggerSave();
-  toast(name + ' 배너 카드 추가됨');
-}
-
-function checkJapaneseText(card) {
-  const texts = [...card.querySelectorAll('[contenteditable]')].map(e => e.textContent).join(' ');
-  const issues = [];
-  if (texts.length > 30) issues.push('텍스트가 ' + texts.length + '자 초과 (권장 30자 이하)');
-  if (/[ぁ-んァ-ン]/.test(texts) === false && texts.length > 5) issues.push('일본어가 없는 텍스트 영역이 있을 수 있습니다');
-  const warn = card.querySelector('.banner-warn');
-  if (warn) { warn.style.display = issues.length ? 'block' : 'none'; warn.textContent = issues.join(' / ') || ''; }
-  toast(issues.length ? '⚠ ' + issues.join(' / ') : '✓ 텍스트 길이 정상');
-}
-
-function checkImageSize(card) {
-  const imgs = card.querySelectorAll('img');
-  let totalBytes = 0;
-  imgs.forEach(img => {
-    const src = img.src;
-    if (src.startsWith('data:')) totalBytes += Math.round(src.length * 0.75);
-  });
-  const mb = (totalBytes / 1024 / 1024).toFixed(2);
-  toast(totalBytes ? (totalBytes > 1024*1024 ? '⚠ 용량 초과: ' + mb + 'MB (1MB 초과)' : '✓ 용량 OK: ' + mb + 'MB') : '이미지 없음');
-}
-
-function exportBannerCard(card, name, w, h) {
-  const wrap = card.querySelector('.banner-safe-wrap') || card;
-  const ts = new Date().toISOString().slice(0,10).replace(/-/g,'');
-  const fname = `${name}_${w}x${h}_${ts}`;
-  exportBannerImage(wrap, fname, 'png');
-}
-
-async function exportBannerImage(el, fname, fmt) {
-  try {
-    if (!window.html2canvas) {
-      await new Promise((res, rej) => {
-        const s = document.createElement('script');
-        s.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';
-        s.onload = res; s.onerror = rej;
-        document.head.appendChild(s);
-      });
-    }
-    toast('Export 중...');
-    const canvas = await window.html2canvas(el, { scale: 2, useCORS: true, allowTaint: true });
-    const mime = fmt === 'jpg' ? 'image/jpeg' : fmt === 'webp' ? 'image/webp' : 'image/png';
-    const a = document.createElement('a');
-    a.href = canvas.toDataURL(mime, 0.92);
-    a.download = fname + '.' + (fmt === 'jpg' ? 'jpg' : fmt === 'webp' ? 'webp' : 'png');
-    a.click();
-    toast('✓ ' + a.download + ' 저장됨');
-  } catch(e) { toast('Export 실패: ' + e.message); }
-}
-
-/* ═══════════════════════════════════════
-   스티커 라이브러리
-═══════════════════════════════════════ */
-const STICKERS = [
-  {cat:'세일',list:['SALE','OFF','할인','특가','최저가','%OFF','¥OFF','円OFF']},
-  {cat:'신상',list:['NEW','신상','新発売','新商品','リニューアル']},
-  {cat:'일본어',list:['メガ割','人気','限定','送料無料','ポイント','クーポン','在庫僅か','タイムセール']},
-  {cat:'랭킹',list:['🏆 1位','🥈 2位','🥉 3位','ランキング1位','売れ筋']},
-  {cat:'긴급',list:['LAST','期間限定','今だけ','残りわずか','SOLDOUT']},
-];
-const STICKER_COLORS = ['#E8001B','#FF6600','#FFD700','#1A237E','#10B981','#8B5CF6','#EC4899','#232F3E'];
-
-function openStickerPanel() {
-  let p = document.getElementById('sticker-panel');
-  if (!p) {
-    p = document.createElement('div');
-    p.id = 'sticker-panel';
-    p.className = 'sticker-panel';
-    document.body.appendChild(p);
-  }
-  p.innerHTML = `
-    <div class="cp-hd">🏷 스티커 라이브러리<button onclick="this.closest('#sticker-panel').classList.remove('open')" style="float:right;background:none;border:none;font-size:16px;cursor:pointer;color:var(--g3)">×</button></div>
-    ${STICKERS.map(cat => `
-      <div class="cp-section-lbl">${cat.cat}</div>
-      <div style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:8px">
-        ${cat.list.map(t => `<div class="sticker-chip" onclick="insertSticker('${t}')" style="background:${STICKER_COLORS[Math.floor(Math.random()*STICKER_COLORS.length)]}">${t}</div>`).join('')}
-      </div>
-    `).join('')}
-    <div class="cp-section-lbl">커스텀 스티커</div>
-    <div style="display:flex;gap:6px">
-      <input id="custom-sticker-inp" placeholder="텍스트" style="flex:1;padding:6px;border:1px solid var(--border);border-radius:6px;font-size:12px;font-family:inherit;outline:none;background:var(--white);color:var(--dark)">
-      <select id="custom-sticker-color" style="padding:4px;border:1px solid var(--border);border-radius:6px;font-size:11px;font-family:inherit;background:var(--white);color:var(--dark)">
-        ${STICKER_COLORS.map(c=>`<option value="${c}" style="background:${c}">${hexToColorName(c)}</option>`).join('')}
-      </select>
-      <button onclick="insertSticker(document.getElementById('custom-sticker-inp').value,document.getElementById('custom-sticker-color').value)" style="padding:6px 10px;background:var(--accent);color:#fff;border:none;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer">추가</button>
-    </div>`;
-  p.classList.toggle('open');
-}
-
-function insertSticker(text, color) {
-  if (!text) return;
-  color = color || STICKER_COLORS[0];
-  const sec = document.querySelector('.section.active');
-  if (!sec) { toast('탭을 먼저 선택하세요'); return; }
-  const btn = sec.querySelector('.add-card-btn');
-  const inner = `<div style="display:inline-flex;gap:6px;flex-wrap:wrap;padding:4px 0">
-    <span class="sticker-badge" style="background:${color}" contenteditable>${text}</span>
-    <button class="add-row-btn edit-only" onclick="addStickerBadge(this)">+ 스티커 추가</button>
-  </div>`;
-  const wrap = makeCardWrap(inner);
-  if (btn) sec.insertBefore(wrap, btn); else sec.appendChild(wrap);
-  schedOv && schedOv(); triggerSave && triggerSave();
-  toast('스티커 추가됨');
-}
-
-function addStickerBadge(btn) {
-  const color = STICKER_COLORS[Math.floor(Math.random() * STICKER_COLORS.length)];
-  const span = document.createElement('span');
-  span.className = 'sticker-badge';
-  span.style.background = color;
-  span.contentEditable = 'true';
-  span.textContent = 'NEW';
-  btn.parentElement.insertBefore(span, btn);
-  span.focus(); document.execCommand('selectAll');
-  triggerSave && triggerSave();
-}
-
-/* ═══════════════════════════════════════
-   코멘트 핀 시스템
-═══════════════════════════════════════ */
-let comments = JSON.parse(localStorage.getItem('kiedit-comments') || '[]');
-let commentMode = false;
-
-function saveComments() { localStorage.setItem('kiedit-comments', JSON.stringify(comments)); }
-
-function toggleCommentMode() {
-  commentMode = !commentMode;
-  document.body.classList.toggle('comment-mode', commentMode);
-  const btn = document.getElementById('comment-mode-btn');
-  if (btn) btn.classList.toggle('active', commentMode);
-  toast(commentMode ? '💬 코멘트 모드 — 카드를 클릭해서 핀 추가' : '코멘트 모드 종료');
-}
-
-function renderCommentPins() {
-  document.querySelectorAll('.comment-pin').forEach(p => p.remove());
-  comments.forEach((c, i) => {
-    const card = document.querySelector('[data-comment-id="' + c.cardId + '"]');
-    if (!card) return;
-    const pin = document.createElement('div');
-    pin.className = 'comment-pin' + (c.resolved ? ' resolved' : '');
-    pin.dataset.idx = i;
-    pin.innerHTML = `<span class="pin-num">${i+1}</span>`;
-    pin.onclick = (e) => { e.stopPropagation(); openCommentPopup(i, pin); };
-    card.style.position = 'relative';
-    card.appendChild(pin);
-  });
-}
-
-function openCommentPopup(idx, pin) {
-  document.querySelectorAll('.comment-popup').forEach(p => p.remove());
-  const c = comments[idx];
-  const popup = document.createElement('div');
-  popup.className = 'comment-popup';
-  popup.innerHTML = `
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
-      <span style="font-size:11px;font-weight:700;color:var(--g3)">${c.author} · ${new Date(c.ts).toLocaleDateString('ko')}</span>
-      <button onclick="this.closest('.comment-popup').remove()" style="background:none;border:none;cursor:pointer;color:var(--g3);font-size:14px">×</button>
-    </div>
-    <div style="font-size:13px;color:var(--dark);margin-bottom:10px;line-height:1.6">${c.text}</div>
-    ${c.requestType ? `<div style="font-size:10px;font-weight:700;padding:3px 8px;border-radius:10px;display:inline-block;margin-bottom:8px;background:${c.requestType==='수정요청'?'#FEE2E2':'#D1FAE5'};color:${c.requestType==='수정요청'?'#B91C1C':'#065F46'}">${c.requestType}</div>` : ''}
-    ${c.replies && c.replies.length ? c.replies.map(r => `<div style="font-size:12px;color:var(--sub);padding:5px 8px;background:var(--g1);border-radius:6px;margin-bottom:4px"><b>${r.author}:</b> ${r.text}</div>`).join('') : ''}
-    <div style="display:flex;gap:5px;margin-top:8px">
-      <input id="reply-inp-${idx}" placeholder="답글 입력..." style="flex:1;padding:5px 8px;border:1px solid var(--border);border-radius:6px;font-size:12px;font-family:inherit;outline:none;background:var(--white);color:var(--dark)">
-      <button onclick="addReply(${idx})" style="padding:5px 9px;background:var(--accent);color:#fff;border:none;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer">↑</button>
-    </div>
-    <div style="display:flex;gap:5px;margin-top:6px">
-      <button onclick="resolveComment(${idx})" style="flex:1;padding:5px;border:1px solid var(--green);color:var(--green);border-radius:6px;font-size:11px;font-weight:700;cursor:pointer;background:none">${c.resolved ? '↺ 재오픈' : '✓ 해결'}</button>
-      <button onclick="deleteComment(${idx})" style="padding:5px 9px;border:1px solid var(--border);color:var(--g3);border-radius:6px;font-size:11px;cursor:pointer;background:none">삭제</button>
-    </div>`;
-  const rect = pin.getBoundingClientRect();
-  popup.style.cssText = `position:fixed;top:${Math.min(rect.bottom+4, window.innerHeight-200)}px;left:${Math.min(rect.left, window.innerWidth-260)}px;z-index:3000;width:240px;`;
-  document.body.appendChild(popup);
-  setTimeout(() => document.addEventListener('click', e => { if (!e.target.closest('.comment-popup') && !e.target.closest('.comment-pin')) popup.remove(); }, { once: true }), 100);
-}
-
-function addCommentToCard(cardEl) {
-  if (!commentMode) return;
-  const text = prompt('코멘트 입력');
-  if (!text) return;
-  const type = confirm('수정 요청으로 표시하시겠습니까?\n(취소 = 일반 코멘트)') ? '수정요청' : '코멘트';
-  let id = cardEl.dataset.commentId;
-  if (!id) { id = 'c_' + Date.now(); cardEl.dataset.commentId = id; }
-  comments.push({ cardId: id, author: myUser.name || '익명', text, requestType: type, ts: Date.now(), resolved: false, replies: [] });
-  saveComments();
-  renderCommentPins();
-  toast('코멘트 추가됨');
-}
-
-function addReply(idx) {
-  const inp = document.getElementById('reply-inp-' + idx);
-  if (!inp || !inp.value.trim()) return;
-  if (!comments[idx].replies) comments[idx].replies = [];
-  comments[idx].replies.push({ author: myUser.name || '익명', text: inp.value.trim(), ts: Date.now() });
-  saveComments(); renderCommentPins();
-  document.querySelectorAll('.comment-popup').forEach(p => p.remove());
-  toast('답글 추가됨');
-}
-
-function resolveComment(idx) {
-  comments[idx].resolved = !comments[idx].resolved;
-  saveComments(); renderCommentPins();
-  document.querySelectorAll('.comment-popup').forEach(p => p.remove());
-  toast(comments[idx].resolved ? '✓ 해결됨' : '↺ 재오픈됨');
-}
-
-function deleteComment(idx) {
-  comments.splice(idx, 1);
-  saveComments(); renderCommentPins();
-  document.querySelectorAll('.comment-popup').forEach(p => p.remove());
-}
-
-// 카드 클릭 시 코멘트 추가
-document.getElementById('main').addEventListener('click', e => {
-  if (!commentMode) return;
-  const card = e.target.closest('.card');
-  if (card) addCommentToCard(card);
+document.addEventListener('click', e => {
+  const menu = document.getElementById('tb-more-menu');
+  if (menu && menu.classList.contains('open') &&
+      !e.target.closest('.tb-more-wrap')) closeMoreMenu();
 });
 
-/* ═══════════════════════════════════════
-   버전 히스토리 (Firebase 영구 + 로컬 fallback)
-═══════════════════════════════════════ */
-const VERSION_HISTORY_KEY = 'kiedit-versions';
-let versionHistory = JSON.parse(localStorage.getItem(VERSION_HISTORY_KEY) || '[]');
-
-function saveVersion(label) {
-  const snap = {
-    id: 'v_' + Date.now(),
-    label: label || '수동 저장',
-    author: myUser.name || '익명',
-    ts: Date.now(),
-    header: document.getElementById('site-header').innerHTML,
-    main: document.getElementById('main').innerHTML,
-    lang: typeof currentLang !== 'undefined' ? currentLang : 'ko',
+/* ── 참여자 me-badge 업데이트 ── */
+function updateMeBadge(){
+  const b = document.getElementById('me-badge');
+  if (!b) return;
+  b.style.background = (typeof myUser !== 'undefined' && myUser.color) ? myUser.color : 'var(--accent)';
+  b.textContent = '나 : ' + ((typeof myUser !== 'undefined' && myUser.name) ? myUser.name : '익명');
+}
+function openNameModal(){
+  document.getElementById('name-modal').classList.add('open');
+  setTimeout(()=>document.getElementById('name-inp')?.focus(),100);
+}
+// confirmName / skipName override
+window.addEventListener('load', ()=>{
+  const origConfirm = window.confirmName;
+  window.confirmName = function(){
+    const n = document.getElementById('name-inp').value.trim();
+    if(!n){toast('이름을 입력해주세요');return;}
+    myUser.name = n;
+    localStorage.setItem('kiedit-user', JSON.stringify(myUser));
+    document.getElementById('name-modal').classList.remove('open');
+    updateMeBadge();
+    initFirebase();
   };
-  versionHistory.unshift(snap);
-  if (versionHistory.length > 30) versionHistory = versionHistory.slice(0, 30);
-  localStorage.setItem(VERSION_HISTORY_KEY, JSON.stringify(versionHistory));
-
-  // Firebase에도 저장
-  if (window._fbReady && window._fbRef) {
-    try {
-      const vRef = { ...window._fbRef };
-      window._fbSet && window._fbSet({ key: window._fbRef.key + '_versions' }, versionHistory);
-    } catch(e) {}
+  window.skipName = function(){
+    myUser.name = '익명';
+    localStorage.setItem('kiedit-user', JSON.stringify(myUser));
+    document.getElementById('name-modal').classList.remove('open');
+    updateMeBadge();
+    initFirebase();
+  };
+  // sessionStorage → localStorage
+  const stored = localStorage.getItem('kiedit-user');
+  if(stored){ try{ Object.assign(myUser, JSON.parse(stored)); } catch(e){} }
+  updateMeBadge();
+  // 이미 이름 있으면 모달 안 띄움
+  if(myUser.name && myUser.name !== ''){
+    document.getElementById('name-modal')?.classList.remove('open');
   }
-  toast('버전 저장됨: ' + snap.label);
-}
+});
 
-function openVersionHistory() {
-  let panel = document.getElementById('version-panel');
-  if (!panel) {
-    panel = document.createElement('div');
-    panel.id = 'version-panel';
-    panel.className = 'version-panel';
-    document.body.appendChild(panel);
+/* ── 탭 드래그 순서 변경 ── */
+function initNavTabDrag(){
+  const nav = document.getElementById('nav');
+  let dragTab = null;
+
+  function makeDraggable(tab){
+    if(tab._navDragInit || tab.classList.contains('is-ov')) return;
+    tab._navDragInit = true;
+    tab.draggable = true;
+    tab.addEventListener('dragstart', e=>{
+      dragTab = tab;
+      tab.style.opacity = '.4';
+      e.dataTransfer.effectAllowed = 'move';
+      e.stopPropagation();
+    });
+    tab.addEventListener('dragend', ()=>{
+      tab.style.opacity = '';
+      dragTab = null;
+      nav.querySelectorAll('.nav-tab').forEach(t=>{
+        t.classList.remove('tab-drag-over-left','tab-drag-over-right');
+      });
+      schedOv && schedOv(); buildToc && buildToc(); triggerSave && triggerSave();
+    });
+    tab.addEventListener('dragover', e=>{
+      if(!dragTab || dragTab === tab) return;
+      e.preventDefault();
+      const rect = tab.getBoundingClientRect();
+      const mid = rect.left + rect.width/2;
+      nav.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('tab-drag-over-left','tab-drag-over-right'));
+      tab.classList.add(e.clientX < mid ? 'tab-drag-over-left' : 'tab-drag-over-right');
+    });
+    tab.addEventListener('dragleave', ()=>{
+      tab.classList.remove('tab-drag-over-left','tab-drag-over-right');
+    });
+    tab.addEventListener('drop', e=>{
+      e.preventDefault();
+      if(!dragTab || dragTab === tab) return;
+      const rect = tab.getBoundingClientRect();
+      const mid = rect.left + rect.width/2;
+      if(e.clientX < mid) nav.insertBefore(dragTab, tab);
+      else tab.nextSibling ? nav.insertBefore(dragTab, tab.nextSibling) : nav.appendChild(dragTab);
+      tab.classList.remove('tab-drag-over-left','tab-drag-over-right');
+    });
   }
-  renderVersionPanel(panel);
-  panel.classList.toggle('open');
+
+  // 기존 탭 초기화
+  nav.querySelectorAll('.nav-tab:not(.is-ov)').forEach(makeDraggable);
+
+  // 새 탭 추가될 때도 자동 적용 (MutationObserver)
+  new MutationObserver(()=>{
+    nav.querySelectorAll('.nav-tab:not(.is-ov)').forEach(makeDraggable);
+  }).observe(nav, {childList:true});
 }
 
-function renderVersionPanel(panel) {
-  panel = panel || document.getElementById('version-panel');
-  panel.innerHTML = `
-    <div class="cp-hd">🕐 버전 히스토리
-      <button onclick="saveVersion(prompt('버전 이름','v'+new Date().toLocaleDateString('ko')))" style="float:right;margin-left:8px;padding:3px 9px;background:var(--accent);color:#fff;border:none;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer">+ 저장</button>
-      <button onclick="this.closest('#version-panel').classList.remove('open')" style="float:right;background:none;border:none;font-size:16px;cursor:pointer;color:var(--g3)">×</button>
-    </div>
-    <div style="flex:1;overflow-y:auto">
-    ${versionHistory.length ? versionHistory.map((v, i) => `
-      <div style="padding:10px 12px;border-bottom:.5px solid var(--border)">
-        <div style="display:flex;justify-content:space-between;align-items:flex-start">
-          <div>
-            <div style="font-size:13px;font-weight:600;color:var(--dark)">${v.label}</div>
-            <div style="font-size:11px;color:var(--g3);margin-top:2px">${v.author} · ${new Date(v.ts).toLocaleString('ko',{month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'})}</div>
-          </div>
-          <button onclick="restoreVersion(${i})" style="padding:4px 10px;border:1px solid var(--accent);color:var(--accent);border-radius:6px;font-size:11px;font-weight:600;cursor:pointer;background:none;white-space:nowrap">복원</button>
-        </div>
-      </div>`).join('') : '<div style="padding:20px;text-align:center;font-size:13px;color:var(--g3)">저장된 버전이 없습니다</div>'}
-    </div>`;
+/* ── PDF — 전체보기 기준으로 전체 출력 ── */
+function printPDF(){
+  // 전체보기 탭으로 전환 후 출력
+  const allTab = document.querySelector('.nav-tab.is-ov');
+  if(allTab) switchTab('all', allTab);
+  // buildOv 기다렸다가 출력
+  setTimeout(()=>{
+    setMode('view');
+    setTimeout(()=>{
+      window.print();
+      setTimeout(()=>setMode('edit'), 500);
+    }, 600);
+  }, 300);
 }
 
-function restoreVersion(idx) {
-  const v = versionHistory[idx];
-  if (!v) return;
-  if (!confirm(v.label + ' 버전으로 복원하시겠습니까?\n현재 내용은 덮어씌워집니다.')) return;
-  document.getElementById('site-header').innerHTML = v.header;
-  document.getElementById('main').innerHTML = v.main;
-  if (typeof setLang === 'function') setLang(v.lang || 'ko');
-  if (typeof initAllDz === 'function') initAllDz();
-  if (typeof initAllCardDrag === 'function') initAllCardDrag();
-  if (typeof buildOv === 'function') buildOv();
-  triggerSave && triggerSave();
-  toast('✓ 복원됨: ' + v.label);
-}
-
-// 자동 버전 저장 (30분마다)
-setInterval(() => saveVersion('자동 저장 ' + new Date().toLocaleTimeString('ko', {hour:'2-digit',minute:'2-digit'})), 30*60*1000);
-
-/* ═══════════════════════════════════════
-   참여자별 기획서 폴더링
-═══════════════════════════════════════ */
-function getProjects() {
-  return JSON.parse(localStorage.getItem('kiedit-projects') || '[]');
-}
-function saveProjects(arr) { localStorage.setItem('kiedit-projects', JSON.stringify(arr)); }
-
-function openProjectsPanel() {
-  let panel = document.getElementById('projects-panel');
-  if (!panel) {
-    panel = document.createElement('div');
-    panel.id = 'projects-panel';
-    panel.className = 'projects-panel';
-    document.body.appendChild(panel);
-  }
-  renderProjectsPanel(panel);
-  panel.classList.toggle('open');
-}
-
-function renderProjectsPanel(panel) {
-  const projects = getProjects();
-  const currentDoc = new URLSearchParams(location.search).get('doc') || 'local';
-  panel.innerHTML = `
-    <div class="cp-hd">📁 내 기획서
-      <button onclick="createNewProject()" style="float:right;margin-left:8px;padding:3px 9px;background:var(--accent);color:#fff;border:none;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer">+ 새 기획서</button>
-      <button onclick="this.closest('#projects-panel').classList.remove('open')" style="float:right;background:none;border:none;font-size:16px;cursor:pointer;color:var(--g3)">×</button>
-    </div>
-    <div style="padding:8px 12px;background:var(--g1);font-size:11px;color:var(--g3);margin-bottom:6px">
-      나 : <b style="color:var(--dark)">${myUser.name || '익명'}</b>
-      <button onclick="openNameModal()" style="margin-left:8px;background:none;border:1px solid var(--border);border-radius:5px;padding:1px 7px;font-size:10px;cursor:pointer;color:var(--g4);font-family:inherit">참여자 변경</button>
-    </div>
-    <div style="flex:1;overflow-y:auto">
-    ${projects.length ? projects.map((p, i) => `
-      <div style="padding:10px 12px;border-bottom:.5px solid var(--border);display:flex;align-items:center;gap:8px;cursor:pointer;${p.docId===currentDoc?'background:var(--al);':''}" onclick="openProject('${p.docId}')">
-        <div style="flex:1">
-          <div style="font-size:13px;font-weight:600;color:var(--dark)">${p.name}</div>
-          <div style="font-size:11px;color:var(--g3);margin-top:2px">${p.owner} · ${new Date(p.ts).toLocaleDateString('ko')}</div>
-          ${p.status ? `<span style="font-size:10px;font-weight:700;padding:2px 7px;border-radius:10px;background:${p.status==='진행중'?'#D1FAE5':'#FEF9C3'};color:${p.status==='진행중'?'#065F46':'#92400E'};display:inline-block;margin-top:3px">${p.status}</span>` : ''}
-        </div>
-        <button onclick="event.stopPropagation();setProjectStatus(${i})" style="padding:3px 8px;border:1px solid var(--border);border-radius:6px;font-size:10px;cursor:pointer;background:none;color:var(--g4);font-family:inherit">상태 변경</button>
-        <button onclick="event.stopPropagation();deleteProject(${i})" style="padding:3px 7px;border:1px solid var(--border);border-radius:6px;font-size:11px;cursor:pointer;background:none;color:var(--g3)">×</button>
-      </div>`).join('') : '<div style="padding:20px;text-align:center;font-size:13px;color:var(--g3)">저장된 기획서가 없습니다</div>'}
-    </div>`;
-  // 현재 문서 자동 등록
-  autoRegisterCurrentProject();
-}
-
-function autoRegisterCurrentProject() {
-  const docId = new URLSearchParams(location.search).get('doc') || 'local';
-  const projects = getProjects();
-  if (!projects.find(p => p.docId === docId)) {
-    const title = document.querySelector('.sh-title')?.textContent?.trim() || '새 기획서';
-    projects.unshift({ docId, name: title, owner: myUser.name || '익명', ts: Date.now(), status: '진행중' });
-    saveProjects(projects);
-  }
-}
-
-function createNewProject() {
-  const name = prompt('기획서 이름');
-  if (!name) return;
-  const docId = 'doc_' + Date.now() + '_' + Math.random().toString(36).slice(2,6);
-  const projects = getProjects();
-  projects.unshift({ docId, name, owner: myUser.name || '익명', ts: Date.now(), status: '진행중' });
-  saveProjects(projects);
-  const url = new URL(location.href);
-  url.searchParams.set('doc', docId);
-  if (confirm('새 기획서 "' + name + '" 을 열겠습니까?')) location.href = url.toString();
-}
-
-function openProject(docId) {
-  const url = new URL(location.href);
-  url.searchParams.set('doc', docId);
-  location.href = url.toString();
-}
-
-function setProjectStatus(idx) {
-  const statuses = ['진행중', '검토중', '완료', '보류'];
-  const projects = getProjects();
-  const cur = statuses.indexOf(projects[idx].status);
-  projects[idx].status = statuses[(cur + 1) % statuses.length];
-  saveProjects(projects);
-  renderProjectsPanel(document.getElementById('projects-panel'));
-  toast('상태: ' + projects[idx].status);
-}
-
-function deleteProject(idx) {
-  if (!confirm('삭제하시겠습니까?')) return;
-  const projects = getProjects();
-  projects.splice(idx, 1);
-  saveProjects(projects);
-  renderProjectsPanel(document.getElementById('projects-panel'));
-}
-
-/* ═══ CSS 동적 주입 ═══ */
-const newCSS = document.createElement('style');
-newCSS.textContent = `
-.color-panel,.sticker-panel,.version-panel,.projects-panel{
-  position:fixed;right:0;top:52px;width:300px;background:var(--white);
-  border-left:1px solid var(--border);border-bottom:1px solid var(--border);
-  border-radius:0 0 0 var(--r);padding:14px 16px;z-index:180;
-  box-shadow:var(--shm);display:none;flex-direction:column;max-height:calc(100vh - 60px);overflow-y:auto;
-}
-.color-panel.open,.sticker-panel.open,.version-panel.open,.projects-panel.open{display:flex;}
-.cp-hd{font-size:13px;font-weight:700;color:var(--dark);margin-bottom:12px;flex-shrink:0;}
-.cp-section-lbl{font-size:10px;font-weight:700;color:var(--g3);letter-spacing:.07em;text-transform:uppercase;margin:8px 0 5px;}
-.cp-swatches{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:4px;}
-.cp-swatch{width:32px;height:32px;border-radius:6px;cursor:pointer;position:relative;border:1px solid rgba(0,0,0,.08);transition:.15s;flex-shrink:0;}
-.cp-swatch:hover{transform:scale(1.12);}
-.cp-hex-lbl{display:none;position:absolute;bottom:-18px;left:50%;transform:translateX(-50%);font-size:9px;color:var(--g3);white-space:nowrap;}
-.cp-swatch:hover .cp-hex-lbl{display:block;}
-.cp-unfav{position:absolute;top:-4px;right:-4px;background:var(--yellow);color:#fff;border:none;border-radius:50%;width:14px;height:14px;font-size:9px;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0;line-height:1;}
-.cp-brand-tab{padding:4px 10px;border:1px solid var(--border);border-radius:20px;font-size:11px;font-weight:600;cursor:pointer;background:var(--white);color:var(--g4);transition:.15s;font-family:inherit;}
-.cp-brand-tab.active{background:var(--accent);color:#fff;border-color:var(--accent);}
-.cp-brand-tabs{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:8px;}
-.sticker-chip{padding:5px 12px;border-radius:20px;color:#fff;font-size:12px;font-weight:700;cursor:pointer;transition:.15s;user-select:none;}
-.sticker-chip:hover{opacity:.85;transform:scale(1.05);}
-.sticker-badge{display:inline-block;padding:4px 12px;border-radius:20px;color:#fff;font-size:12px;font-weight:700;}
-.sticker-badge[contenteditable]:focus{outline:none;}
-.comment-pin{position:absolute;bottom:8px;right:8px;width:22px;height:22px;background:var(--accent);border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:10;box-shadow:0 2px 6px rgba(0,0,0,.2);transition:.15s;}
-.comment-pin:hover{transform:scale(1.1);}
-.comment-pin.resolved{background:var(--green);}
-.comment-pin .pin-num{font-size:10px;font-weight:700;color:#fff;}
-.comment-popup{background:var(--white);border:1px solid var(--border);border-radius:12px;padding:14px;box-shadow:var(--shm);z-index:3000;}
-body.comment-mode .card{cursor:crosshair!important;}
-body.comment-mode .card:hover{outline:2px dashed var(--accent);}
-.version-panel,.projects-panel{width:320px;}
-`;
-document.head.appendChild(newCSS);
-
-/* ═══ 툴바에 새 버튼 주입 ═══ */
-(function injectToolbarButtons() {
-  const tbRight = document.querySelector('.tb-right');
-  if (!tbRight) return;
-  const btns = [
-    { text: '📁 기획서', onclick: 'openProjectsPanel()', title: '기획서 폴더' },
-    { text: '🎨 컬러', onclick: 'openColorPanel()', title: '컬러 팔레트' },
-    { text: '📐 배너', onclick: 'openBannerPresetModal()', title: '배너 사이즈 Preset' },
-    { text: '🏷 스티커', onclick: 'openStickerPanel()', title: '스티커 라이브러리' },
-    { text: '💬 코멘트', onclick: 'toggleCommentMode()', title: '코멘트 핀', id: 'comment-mode-btn' },
-    { text: '🕐 버전', onclick: 'openVersionHistory()', title: '버전 히스토리' },
-  ];
-  const firstBtn = tbRight.querySelector('.icon-btn');
-  btns.reverse().forEach(b => {
-    const btn = document.createElement('button');
-    btn.className = 'icon-btn';
-    btn.textContent = b.text;
-    btn.title = b.title;
-    btn.setAttribute('onclick', b.onclick);
-    if (b.id) btn.id = b.id;
-    tbRight.insertBefore(btn, firstBtn);
-  });
-})();
-
-// 페이지 로드 시 코멘트 핀 복원 & 프로젝트 자동 등록
-window.addEventListener('load', () => {
-  setTimeout(() => { renderCommentPins(); autoRegisterCurrentProject(); updateMeBadge(); }, 500);
+window.addEventListener('load', ()=>{
+  initNavTabDrag();
+  updateMeBadge();
 });
 </script>
