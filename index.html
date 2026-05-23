@@ -2099,17 +2099,6 @@ document.getElementById('main').addEventListener('input',()=>{
 });
 </script>
 
-<!-- ── Firebase 설정 안내 오버레이 ── -->
-<div id="fb-setup-hint" style="display:none;position:fixed;bottom:16px;right:16px;background:#1E293B;color:#fff;border-radius:12px;padding:14px 16px;font-size:12px;max-width:280px;z-index:9000;line-height:1.6;box-shadow:0 8px 24px rgba(0,0,0,.3)">
-  <div style="font-weight:700;margin-bottom:6px;color:#60A5FA">🔥 Firebase 실시간 협업 설정</div>
-  <div style="color:#94A3B8">파일 상단 <code style="background:#334155;padding:1px 5px;border-radius:3px">firebaseConfig</code> 에 Firebase 콘솔 값을 입력하면 실시간 동기화가 활성화됩니다.</div>
-  <button onclick="document.getElementById('fb-setup-hint').style.display='none'" style="margin-top:8px;background:#334155;border:none;color:#94A3B8;padding:4px 10px;border-radius:6px;cursor:pointer;font-size:11px;font-family:inherit">닫기</button>
-</div>
-<script>
-  // Firebase 미설정 시 안내
-  if (!window._fbReady) {
-    setTimeout(() => { document.getElementById('fb-setup-hint').style.display = 'block'; }, 2000);
-  }
-</script>
+
 </body>
 </html>
