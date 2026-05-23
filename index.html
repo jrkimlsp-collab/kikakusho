@@ -576,10 +576,31 @@ body.readonly-mode [contenteditable]{pointer-events:none;}
 .gantt-table td{border:1px solid var(--border);padding:5px 8px;vertical-align:middle;}
 .gantt-table td[contenteditable]:focus{outline:none;background:var(--al);}
 .gantt-bar-cell{position:relative;height:28px;min-width:200px;}
-.gantt-bar{position:absolute;top:4px;height:20px;border-radius:4px;background:var(--accent);opacity:.8;display:flex;align-items:center;padding:0 6px;font-size:10px;font-weight:700;color:#fff;white-space:nowrap;overflow:hidden;min-width:24px;cursor:ew-resize;user-select:none;}
+.gantt-bar{position:absolute;top:4px;height:20px;border-radius:4px;background:var(--accent);opacity:.8;display:flex;align-items:center;padding:0 6px;font-size:10px;font-weight:700;color:#fff;white-space:nowrap;overflow:hidden;min-width:24px;cursor:grab;user-select:none;transition:opacity .1s;}
 .gantt-bar:hover{opacity:1;}
+.gantt-bar::after{content:'';position:absolute;right:0;top:0;width:6px;height:100%;cursor:ew-resize;background:rgba(255,255,255,.25);border-radius:0 4px 4px 0;}
+.gantt-bar.dragging{cursor:grabbing;opacity:.9;box-shadow:0 2px 8px rgba(0,0,0,.2);}
 .gantt-header-cols{display:flex;}
 .gantt-col-lbl{flex:1;text-align:center;font-size:10px;color:var(--g3);padding:2px 0;border-right:1px solid var(--border);}
+.gantt-period-row{display:flex;gap:6px;margin-bottom:6px;}
+/* 비교표 추가 CSS */
+.cmp-th-del{width:28px;padding:0!important;background:var(--g1)!important;}
+.cmp-th-del button{width:100%;height:100%;min-height:28px;background:none;border:none;cursor:pointer;color:var(--g3);font-size:14px;line-height:1;font-family:inherit;}
+.cmp-th-del button:hover{color:var(--red);}
+.cmp-row-del-cell{width:28px!important;padding:2px!important;text-align:center;}
+.cmp-btns{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap;}
+.cmp-btns .add-row-btn{flex:1;min-width:70px;}
+/* 플로우 삭제 버튼 */
+.flow-pill-wrap{display:inline-flex;align-items:center;gap:2px;position:relative;}
+.flow-pill-del{display:none;width:14px;height:14px;border-radius:50%;background:var(--red);color:#fff;border:none;cursor:pointer;font-size:9px;line-height:1;padding:0;align-items:center;justify-content:center;flex-shrink:0;}
+.edit-mode .flow-pill-wrap:hover .flow-pill-del{display:flex;}
+/* 체크리스트 전체 토글 */
+.chk-all-btn{font-size:10px;padding:2px 7px;border:1px solid var(--border);border-radius:5px;background:none;cursor:pointer;color:var(--g4);font-family:inherit;margin-left:auto;display:block;margin-bottom:6px;}
+.chk-all-btn:hover{border-color:var(--accent);color:var(--accent);}
+/* 타임라인 점 색상 변경 */
+.tl-dot{cursor:pointer;}
+/* 테이블 col resize */
+.col-resize-handle{position:absolute;right:-3px;top:0;width:6px;height:100%;cursor:col-resize;z-index:5;}
 
 /* 차트 카드 */
 .chart-type-row{display:flex;gap:5px;margin-bottom:10px;flex-wrap:wrap;}
@@ -1607,11 +1628,11 @@ function insertCard(sid, type) {
   else if(type==='img-full'){inner=`<div class="card-label" contenteditable>이미지</div>${makeDz('클릭 · 드래그앤드롭 · Ctrl+V')}<div class="img-caption" contenteditable>이미지 설명</div>`;}
   else if(type==='ref'){inner=`<div class="card-label" contenteditable>레퍼런스</div><div class="ref-grid">${[0,1].map(()=>`<div class="ref-grid-item"><button class="ref-grid-del edit-only" onclick="this.closest('.ref-grid-item').remove()">×</button>${makeDz('이미지')}<div class="ref-cap" contenteditable>캡션</div></div>`).join('')}</div><button class="add-row-btn edit-only" onclick="addRefItem(this)">+ 이미지 추가</button><div class="link-list"></div><button class="link-add-btn edit-only" onclick="openLinkModal(this.previousElementSibling)">+ 링크 추가</button>`;}
   else if(type==='kpi'){inner=`<div class="card-label" contenteditable>핵심 수치</div><div class="kpi-grid"><div class="kpi-item" style="position:relative"><button class="row-del edit-only" style="position:absolute;top:4px;right:4px" onclick="this.closest('.kpi-item').remove()">×</button><div class="kpi-val" contenteditable>-</div><div class="kpi-lbl" contenteditable>항목</div></div><div class="kpi-item" style="position:relative"><button class="row-del edit-only" style="position:absolute;top:4px;right:4px" onclick="this.closest('.kpi-item').remove()">×</button><div class="kpi-val" contenteditable>-</div><div class="kpi-lbl" contenteditable>항목</div></div></div><button class="add-row-btn edit-only" onclick="addKpiItem(this)">+ 항목 추가</button>`;}
-  else if(type==='flow'){inner=`<div class="card-label" contenteditable>플로우</div><div class="flow-row"><span class="flow-pill blue" contenteditable>단계1</span><span class="flow-arrow">→</span><span class="flow-pill yellow" contenteditable>단계2</span><span class="flow-arrow">→</span><span class="flow-pill green" contenteditable>단계3</span></div><button class="add-row-btn edit-only" onclick="addFlowPill(this)">+ 단계 추가</button>`;}
+  else if(type==='flow'){inner=`<div class="card-label" contenteditable>플로우</div><div class="flow-row"><span class="flow-pill-wrap"><span class="flow-pill blue" contenteditable>단계1</span><button class="flow-pill-del edit-only" onclick="delFlowPill(this)" title="단계 삭제">×</button></span><span class="flow-arrow">→</span><span class="flow-pill-wrap"><span class="flow-pill yellow" contenteditable>단계2</span><button class="flow-pill-del edit-only" onclick="delFlowPill(this)" title="단계 삭제">×</button></span><span class="flow-arrow">→</span><span class="flow-pill-wrap"><span class="flow-pill green" contenteditable>단계3</span><button class="flow-pill-del edit-only" onclick="delFlowPill(this)" title="단계 삭제">×</button></span></div><button class="add-row-btn edit-only" onclick="addFlowPill(this)">+ 단계 추가</button>`;}
   else if(type==='checklist'){inner=`<div class="card-label" contenteditable>체크리스트</div><div class="chk-list"><div class="chk-item"><input type="checkbox" onchange="this.closest('.chk-item').classList.toggle('done',this.checked)"><span class="chk-txt" contenteditable>항목 내용</span><button class="row-del edit-only" onclick="this.closest('.chk-item').remove()">×</button></div></div><button class="add-row-btn edit-only" onclick="addChkItem(this)">+ 항목 추가</button>`;}
   else if(type==='badge'){inner=`<div class="card-label" contenteditable>배지 목록</div><div class="badge-list"><div class="badge-row"><span class="badge-tag red" contenteditable>배지</span><span class="badge-desc" contenteditable>설명</span><button class="row-del edit-only" onclick="this.closest('.badge-row').remove()">×</button></div></div><button class="add-row-btn edit-only" onclick="addBadgeRow(this)">+ 항목 추가</button>`;}
   else if(type==='free'){inner=`<div class="card-label" contenteditable>자유 형태</div><div class="free-blocks"><div class="free-block"><span contenteditable>텍스트 입력</span><button class="free-block-del edit-only" onclick="this.closest('.free-block').remove()">×</button></div></div><div class="free-add-row edit-only"><button class="free-add-btn" onclick="addFreeBlock(this,'text')">+ 텍스트</button><button class="free-add-btn" onclick="addFreeBlock(this,'img')">+ 이미지</button><button class="free-add-btn" onclick="addFreeBlock(this,'badge')">+ 배지</button><button class="free-add-btn" onclick="addFreeBlock(this,'price')">+ 가격</button><button class="free-add-btn" onclick="addFreeBlock(this,'bitext')">+ KO/JA</button></div>`;}
-  else if(type==='compare'){inner=`<div class="card-label" contenteditable>비교표</div><div style="overflow-x:auto"><table class="cmp-table"><thead><tr><th contenteditable>항목</th><th contenteditable>A안</th><th contenteditable>B안</th></tr></thead><tbody><tr><td contenteditable>기능 1</td><td contenteditable class="cmp-check">✓</td><td contenteditable class="cmp-x">✗</td></tr><tr><td contenteditable>기능 2</td><td contenteditable>-</td><td contenteditable class="cmp-check">✓</td></tr><tr><td contenteditable>가격</td><td contenteditable>-엔</td><td contenteditable>-엔</td></tr></tbody></table></div><button class="add-row-btn edit-only" onclick="addCmpRow(this)">+ 행 추가</button>`;}
+  else if(type==='compare'){inner=`<div class="card-label" contenteditable>비교표</div><div style="overflow-x:auto"><table class="cmp-table"><thead><tr><th contenteditable>항목</th><th contenteditable>A안</th><th contenteditable>B안</th><th class="edit-only cmp-th-del"><button onclick="delCmpCol(this)" title="마지막 열 삭제">−</button></th></tr></thead><tbody><tr><td contenteditable>기능 1</td><td contenteditable class="cmp-check" ondblclick="toggleCmpCell(this)">✓</td><td contenteditable class="cmp-x" ondblclick="toggleCmpCell(this)">✗</td><td class="edit-only cmp-row-del-cell"><button class="row-del" onclick="this.closest('tr').remove();triggerSave()">×</button></td></tr><tr><td contenteditable>기능 2</td><td contenteditable ondblclick="toggleCmpCell(this)">-</td><td contenteditable class="cmp-check" ondblclick="toggleCmpCell(this)">✓</td><td class="edit-only cmp-row-del-cell"><button class="row-del" onclick="this.closest('tr').remove();triggerSave()">×</button></td></tr><tr><td contenteditable>가격</td><td contenteditable ondblclick="toggleCmpCell(this)">-</td><td contenteditable ondblclick="toggleCmpCell(this)">-</td><td class="edit-only cmp-row-del-cell"><button class="row-del" onclick="this.closest('tr').remove();triggerSave()">×</button></td></tr></tbody></table></div><div class="edit-only cmp-btns"><button class="add-row-btn" onclick="addCmpRow(this)">+ 행 추가</button><button class="add-row-btn" onclick="addCmpCol(this)">+ 열 추가</button></div>`;}
   else if(type==='palette'){
     const colors=['#4F6BED','#10B981','#F59E0B','#EF4444','#8B5CF6'];
     const swatches=colors.map(c=>`<div class="palette-swatch" style="background:${c}" onclick="editPaletteColor(this)"><span class="palette-hex">${c}</span></div>`).join('');
@@ -1619,7 +1640,18 @@ function insertCard(sid, type) {
   }
   else if(type==='embed'){inner=`<div class="card-label" contenteditable>영상 임베드</div><div class="edit-only" style="margin-bottom:8px"><input class="embed-url-inp" placeholder="YouTube 또는 Figma URL 입력 후 Enter" onkeydown="if(event.key==='Enter')loadEmbed(this)"><button class="add-row-btn" onclick="loadEmbed(this.previousElementSibling)">▶ 불러오기</button></div><div class="embed-container"></div>`;}
   else if(type==='gantt'){
-    inner=`<div class="card-label" contenteditable>간트차트</div><div class="gantt-wrap"><div class="gantt-header-cols" id="gantt-hdr-${Date.now()}"></div><table class="gantt-table"><thead><tr><th style="width:120px">작업</th><th style="width:70px">담당자</th><th style="min-width:300px;padding:0"><div class="gantt-header-cols" style="display:flex">${Array.from({length:8},(_,i)=>`<div class="gantt-col-lbl">${i+1}주</div>`).join('')}</div></th></tr></thead><tbody id="gantt-body-${Date.now()}"><tr><td contenteditable>기획</td><td contenteditable>-</td><td class="gantt-bar-cell"><div class="gantt-bar" style="left:0%;width:25%" contenteditable>기획</div></td></tr><tr><td contenteditable>디자인</td><td contenteditable>-</td><td class="gantt-bar-cell"><div class="gantt-bar" style="left:25%;width:37.5%;background:var(--green)" contenteditable>디자인</div></td></tr><tr><td contenteditable>개발</td><td contenteditable>-</td><td class="gantt-bar-cell"><div class="gantt-bar" style="left:50%;width:37.5%;background:var(--purple)" contenteditable>개발</div></td></tr></tbody></table></div><button class="add-row-btn edit-only" onclick="addGanttRow(this)">+ 작업 추가</button>`;
+    const gid=Date.now();
+    const cols=8;
+    const colHdr=Array.from({length:cols},(_,i)=>`<div class="gantt-col-lbl">${i+1}주</div>`).join('');
+    inner=`<div class="card-label" contenteditable>간트차트</div>`
+      +`<div class="edit-only gantt-period-row"><button class="add-row-btn" style="padding:4px 8px;font-size:11px" onclick="addGanttPeriod(this)">+ 기간 추가</button><button class="add-row-btn" style="padding:4px 8px;font-size:11px" onclick="delGanttPeriod(this)">− 기간 삭제</button></div>`
+      +`<div class="gantt-wrap"><table class="gantt-table" data-cols="${cols}"><thead><tr><th style="width:120px">작업</th><th style="width:70px">담당자</th><th style="min-width:300px;padding:0"><div class="gantt-header-cols" style="display:flex">${colHdr}</div></th><th class="edit-only" style="width:28px;padding:0"></th></tr></thead>`
+      +`<tbody>`
+      +`<tr><td contenteditable>기획</td><td contenteditable>-</td><td class="gantt-bar-cell"><div class="gantt-bar" style="left:0%;width:25%" title="드래그: 이동 / 오른쪽 끝 드래그: 크기조절">기획</div></td><td class="edit-only" style="text-align:center;padding:2px"><button class="row-del" onclick="this.closest('tr').remove();triggerSave()">×</button></td></tr>`
+      +`<tr><td contenteditable>디자인</td><td contenteditable>-</td><td class="gantt-bar-cell"><div class="gantt-bar" style="left:25%;width:37.5%;background:var(--green)" title="드래그: 이동 / 오른쪽 끝 드래그: 크기조절">디자인</div></td><td class="edit-only" style="text-align:center;padding:2px"><button class="row-del" onclick="this.closest('tr').remove();triggerSave()">×</button></td></tr>`
+      +`<tr><td contenteditable>개발</td><td contenteditable>-</td><td class="gantt-bar-cell"><div class="gantt-bar" style="left:50%;width:37.5%;background:var(--purple)" title="드래그: 이동 / 오른쪽 끝 드래그: 크기조절">개발</div></td><td class="edit-only" style="text-align:center;padding:2px"><button class="row-del" onclick="this.closest('tr').remove();triggerSave()">×</button></td></tr>`
+      +`</tbody></table></div>`
+      +`<button class="add-row-btn edit-only" onclick="addGanttRow(this)">+ 작업 추가</button>`;
   }
   else if(type==='chart'){
     const cid='chart_'+Date.now();
@@ -1639,7 +1671,47 @@ function addTlItem(btn){const list=btn.closest('.card').querySelector('.tl-list'
 function addChkItem(btn){const list=btn.closest('.card').querySelector('.chk-list');const item=document.createElement('div');item.className='chk-item';item.innerHTML='<input type="checkbox" onchange="this.closest(\'.chk-item\').classList.toggle(\'done\',this.checked)"><span class="chk-txt" contenteditable>항목</span><button class="row-del edit-only" onclick="this.closest(\'.chk-item\').remove()">×</button>';list.appendChild(item);triggerSave();}
 function addBadgeRow(btn){const list=btn.closest('.card').querySelector('.badge-list');const row=document.createElement('div');row.className='badge-row';row.innerHTML='<span class="badge-tag blue" contenteditable>배지</span><span class="badge-desc" contenteditable>설명</span><button class="row-del edit-only" onclick="this.closest(\'.badge-row\').remove()">×</button>';list.appendChild(row);triggerSave();}
 function addKpiItem(btn){const grid=btn.closest('.card').querySelector('.kpi-grid');const item=document.createElement('div');item.className='kpi-item';item.style.position='relative';item.innerHTML='<button class="row-del edit-only" style="position:absolute;top:4px;right:4px" onclick="this.closest(\'.kpi-item\').remove()">×</button><div class="kpi-val" contenteditable>-</div><div class="kpi-lbl" contenteditable>항목</div>';grid.appendChild(item);triggerSave();}
-function addFlowPill(btn){const row=btn.closest('.card').querySelector('.flow-row');const arrow=document.createElement('span');arrow.className='flow-arrow';arrow.textContent='→';const pill=document.createElement('span');pill.className='flow-pill blue';pill.contentEditable='true';pill.textContent='단계';row.appendChild(arrow);row.appendChild(pill);pill.focus();document.execCommand('selectAll');triggerSave();}
+function addFlowPill(btn){
+  const row=btn.closest('.card').querySelector('.flow-row');
+  const colors=['blue','yellow','green','red'];
+  const existingPills=row.querySelectorAll('.flow-pill');
+  const c=colors[existingPills.length%colors.length];
+  const arrow=document.createElement('span');
+  arrow.className='flow-arrow';
+  arrow.textContent='→';
+  const wrap=document.createElement('span');
+  wrap.className='flow-pill-wrap';
+  const pill=document.createElement('span');
+  pill.className='flow-pill '+c;
+  pill.contentEditable='true';
+  pill.textContent='단계';
+  const del=document.createElement('button');
+  del.className='flow-pill-del edit-only';
+  del.title='단계 삭제';
+  del.textContent='×';
+  del.setAttribute('onclick','delFlowPill(this)');
+  wrap.appendChild(pill);
+  wrap.appendChild(del);
+  row.appendChild(arrow);
+  row.appendChild(wrap);
+  pill.focus();
+  document.execCommand('selectAll');
+  triggerSave();
+}
+
+function delFlowPill(btn){
+  const row=btn.closest('.flow-row');
+  const wrap=btn.closest('.flow-pill-wrap');
+  const allWraps=Array.from(row.querySelectorAll('.flow-pill-wrap'));
+  if(allWraps.length<=1){toast('최소 1단계는 유지해야 합니다');return;}
+  // remove preceding arrow or following arrow
+  const prev=wrap.previousElementSibling;
+  const next=wrap.nextElementSibling;
+  if(prev && prev.classList.contains('flow-arrow')) prev.remove();
+  else if(next && next.classList.contains('flow-arrow')) next.remove();
+  wrap.remove();
+  triggerSave();
+}
 function addPrdItem(btn){const grid=btn.closest('.prd-grid');const item=document.createElement('div');item.className='prd-grid-item';item.style.position='relative';item.innerHTML='<button class="prd-grid-del edit-only" onclick="this.closest(\'.prd-grid-item\').remove()">×</button>'+makeDz('이미지')+'<div class="prd-grid-info"><div class="prd-grid-name" contenteditable>상품명</div><div class="prd-grid-price" contenteditable>-엔</div><div class="prd-grid-pct" contenteditable>-% OFF</div></div>';grid.insertBefore(item,btn);initAllDz();triggerSave();}
 function addImgGridItem(btn){const grid=btn.closest('.card').querySelector('.ref-grid');const item=document.createElement('div');item.className='ref-grid-item';item.innerHTML='<button class="ref-grid-del edit-only" onclick="this.closest(\'.ref-grid-item\').remove()">×</button>'+makeDz('이미지')+'<div class="ref-cap" contenteditable>캡션</div>';grid.appendChild(item);initAllDz();triggerSave();}
 function addRefItem(btn){addImgGridItem(btn);}
@@ -1904,8 +1976,10 @@ function addGanttRow(btn){
   const c=colors[tbody.children.length%colors.length];
   const row=document.createElement('tr');
   const lbl='작업'+(tbody.children.length+1);
-  row.innerHTML=`<td contenteditable>${lbl}</td><td contenteditable>-</td><td class="gantt-bar-cell"><div class="gantt-bar" style="left:0%;width:25%;background:${c}" contenteditable>${lbl}</div></td>`;
-  tbody.appendChild(row);triggerSave();
+  row.innerHTML=`<td contenteditable>${lbl}</td><td contenteditable>-</td><td class="gantt-bar-cell"><div class="gantt-bar" style="left:0%;width:25%;background:${c}" title="드래그: 이동 / 오른쪽 끝 드래그: 크기조절">${lbl}</div></td><td class="edit-only" style="text-align:center;padding:2px"><button class="row-del" onclick="this.closest('tr').remove();triggerSave()">×</button></td>`;
+  tbody.appendChild(row);
+  initGanttDrag(row.querySelector('.gantt-bar'));
+  triggerSave();
 }
 
 /* ═══════════════════════════════════════
@@ -2045,10 +2119,72 @@ function initCrossTabDrag(){
 
 function addCmpRow(btn){
   const tbody=btn.closest('.card').querySelector('tbody');
-  const cols=btn.closest('.card').querySelectorAll('thead th').length;
+  const allTh=btn.closest('.card').querySelectorAll('thead th');
+  // count data cols (exclude the ×-header col)
+  const dataCols=Array.from(allTh).filter(th=>!th.classList.contains('cmp-th-del')).length;
   const row=document.createElement('tr');
-  for(let i=0;i<cols;i++){const td=document.createElement('td');td.contentEditable='true';td.textContent=i===0?'항목':'-';row.appendChild(td);}
+  for(let i=0;i<dataCols;i++){
+    const td=document.createElement('td');
+    td.contentEditable='true';
+    td.textContent=i===0?'항목':'-';
+    if(i>0) td.setAttribute('ondblclick','toggleCmpCell(this)');
+    row.appendChild(td);
+  }
+  // delete cell
+  const delTd=document.createElement('td');
+  delTd.className='edit-only cmp-row-del-cell';
+  delTd.innerHTML='<button class="row-del" onclick="this.closest(\'tr\').remove();triggerSave()">×</button>';
+  row.appendChild(delTd);
   tbody.appendChild(row);triggerSave();
+}
+
+function addCmpCol(btn){
+  const card=btn.closest('.card');
+  const table=card.querySelector('.cmp-table');
+  const headerRow=table.querySelector('thead tr');
+  const delTh=headerRow.querySelector('.cmp-th-del');
+  const colCount=headerRow.querySelectorAll('th:not(.cmp-th-del)').length;
+  const labels=['A안','B안','C안','D안','E안','F안'];
+  const newTh=document.createElement('th');
+  newTh.contentEditable='true';
+  newTh.textContent=labels[colCount-1]||('안'+(colCount));
+  headerRow.insertBefore(newTh,delTh);
+  table.querySelectorAll('tbody tr').forEach(row=>{
+    const delCell=row.querySelector('.cmp-row-del-cell');
+    const td=document.createElement('td');
+    td.contentEditable='true';
+    td.textContent='-';
+    td.setAttribute('ondblclick','toggleCmpCell(this)');
+    row.insertBefore(td,delCell);
+  });
+  triggerSave();
+}
+
+function delCmpCol(btn){
+  const card=btn.closest('.card');
+  const table=card.querySelector('.cmp-table');
+  const headerRow=table.querySelector('thead tr');
+  const dataThs=headerRow.querySelectorAll('th:not(.cmp-th-del)');
+  if(dataThs.length<=2){toast('최소 2열은 유지해야 합니다');return;}
+  dataThs[dataThs.length-1].remove();
+  table.querySelectorAll('tbody tr').forEach(row=>{
+    const cells=row.querySelectorAll('td:not(.cmp-row-del-cell)');
+    if(cells.length>1) cells[cells.length-1].remove();
+  });
+  triggerSave();
+}
+
+function toggleCmpCell(td){
+  if(!document.body.classList.contains('edit-mode')) return;
+  const states=['-','✓','✗'];
+  const cur=td.textContent.trim();
+  const idx=states.indexOf(cur);
+  const next=states[(idx+1)%states.length];
+  td.textContent=next;
+  td.className=td.className.replace(/cmp-check|cmp-x/g,'').trim();
+  if(next==='✓') td.classList.add('cmp-check');
+  else if(next==='✗') td.classList.add('cmp-x');
+  triggerSave();
 }
 function editPaletteColor(swatch){
   const hex=prompt('컬러 코드 입력 (#RRGGBB)',swatch.style.background);
@@ -2381,11 +2517,16 @@ function switchGanttView(btn, vt) {
   btn.classList.add('active');
   var lbl = card.querySelector('.gantt-view-lbl');
   if(lbl) lbl.textContent = v.label + ' 기준';
-  var th = card.querySelector('.gantt-table thead tr th:last-child');
+  // 헤더 컬럼 셀: edit-only 삭제 열 이전의 마지막 th
+  var ths = card.querySelectorAll('.gantt-table thead tr th');
+  var th = null;
+  ths.forEach(function(t){ if(!t.classList.contains('edit-only')) th=t; });
   if(th){
     var h='';
     for(var i=0;i<v.cols;i++) h+='<div class="gantt-col-lbl" style="min-width:'+v.colW+'px;text-align:center;font-size:10px;color:var(--g3);border-right:1px solid var(--border);padding:2px 0">'+(i+1)+v.unit+'</div>';
     th.innerHTML='<div style="display:flex">'+h+'</div>';
+    var table=card.querySelector('.gantt-table');
+    if(table) table.dataset.cols=v.cols;
   }
 }
 
@@ -3751,6 +3892,237 @@ window.openModal=function(id){
   if(_origOM) _origOM(id);
   if(id==='card-picker-modal') setTimeout(renderPickerDesignTab,60);
 };
+
+/* ═══════════════════════════════════════════════════
+   ★ PATCH: 실무 편의 기능 일괄 추가
+   1. 간트 바 드래그 이동 + 오른쪽 끝 리사이즈
+   2. 간트 기간(열) 추가/삭제
+   3. 비교표 열 추가/삭제 + 더블클릭 ✓/✗ 토글
+   4. 플로우 단계 삭제
+   5. Enter 키 → 새 행 추가 (KV/체크/배지/타임라인)
+   6. 체크리스트 전체 완료/미완료 토글 버튼
+   7. 타임라인 점 클릭 → 색상 순환
+   8. 테이블 열 너비 드래그 조절 (비교표 / 간트)
+════════════════════════════════════════════════════ */
+
+/* ── 1. 간트 바 드래그 이동 + 리사이즈 ── */
+(function(){
+  var _drag=null;
+  function pct(bar,px){
+    var cell=bar.closest('.gantt-bar-cell');
+    if(!cell) return 0;
+    return Math.round(px/cell.offsetWidth*1000)/10;
+  }
+  function clamp(v,mn,mx){return Math.max(mn,Math.min(mx,v));}
+
+  document.addEventListener('mousedown',function(e){
+    var bar=e.target.closest('.gantt-bar');
+    if(!bar) return;
+    if(!document.body.classList.contains('edit-mode')) return;
+    e.preventDefault();
+    var cell=bar.closest('.gantt-bar-cell');
+    var rect=cell.getBoundingClientRect();
+    var barRect=bar.getBoundingClientRect();
+    var startX=e.clientX;
+    var startLeft=parseFloat(bar.style.left)||0;
+    var startWidth=parseFloat(bar.style.width)||25;
+    // 오른쪽 6px = 리사이즈 핸들
+    var isResize=(e.clientX-barRect.right)>-8;
+    bar.classList.add('dragging');
+    _drag={bar,cell,rect,startX,startLeft,startWidth,isResize,cellW:cell.offsetWidth};
+  });
+
+  document.addEventListener('mousemove',function(e){
+    if(!_drag) return;
+    var dx=e.clientX-_drag.startX;
+    var dpct=Math.round(dx/_drag.cellW*1000)/10;
+    if(_drag.isResize){
+      var newW=clamp(_drag.startWidth+dpct,5,100-_drag.startLeft);
+      _drag.bar.style.width=newW+'%';
+    } else {
+      var newL=clamp(_drag.startLeft+dpct,0,100-_drag.startWidth);
+      _drag.bar.style.left=newL+'%';
+    }
+  });
+
+  document.addEventListener('mouseup',function(){
+    if(!_drag) return;
+    _drag.bar.classList.remove('dragging');
+    _drag=null;
+    if(typeof triggerSave==='function') triggerSave();
+  });
+})();
+
+/* 초기화: 문서 로드 후 기존 간트 바에도 드래그 적용 (CSS만으로 동작) */
+function initGanttDrag(bar){/* CSS cursor 처리로 충분, mousedown은 delegate */ }
+
+/* ── 2. 간트 기간 추가/삭제 ── */
+function addGanttPeriod(btn){
+  var table=btn.closest('.card').querySelector('.gantt-table');
+  var cols=parseInt(table.dataset.cols||8);
+  cols++;
+  table.dataset.cols=cols;
+  var hdr=table.querySelector('.gantt-header-cols');
+  if(hdr){
+    var lbl=document.createElement('div');
+    lbl.className='gantt-col-lbl';
+    lbl.textContent=cols+'주';
+    hdr.appendChild(lbl);
+  }
+  // 각 바의 최대 width 제한이 100%이므로 별도 처리 불필요
+  triggerSave();
+  toast(cols+'주로 변경됨');
+}
+function delGanttPeriod(btn){
+  var table=btn.closest('.card').querySelector('.gantt-table');
+  var cols=parseInt(table.dataset.cols||8);
+  if(cols<=2){toast('최소 2주는 유지해야 합니다');return;}
+  cols--;
+  table.dataset.cols=cols;
+  var hdr=table.querySelector('.gantt-header-cols');
+  if(hdr && hdr.lastElementChild) hdr.lastElementChild.remove();
+  triggerSave();
+  toast(cols+'주로 변경됨');
+}
+
+/* ── 5. Enter 키 → 새 행 추가 ── */
+document.addEventListener('keydown',function(e){
+  if(e.key!=='Enter') return;
+  if(!document.body.classList.contains('edit-mode')) return;
+  var t=e.target;
+
+  // KV
+  if(t.classList.contains('kv-key')||t.classList.contains('kv-val')){
+    e.preventDefault();
+    var row=t.closest('.kv-row');
+    var addBtn=row.closest('.card').querySelector('.add-row-btn');
+    if(addBtn) addBtn.click();
+    // 새로 추가된 행의 첫 번째 셀로 포커스
+    var allRows=row.closest('.kv-list').querySelectorAll('.kv-row');
+    var last=allRows[allRows.length-1];
+    if(last) last.querySelector('[contenteditable]').focus();
+    return;
+  }
+
+  // 체크리스트
+  if(t.classList.contains('chk-txt')){
+    e.preventDefault();
+    var addBtn=t.closest('.card').querySelector('.add-row-btn');
+    if(addBtn) addBtn.click();
+    var list=t.closest('.chk-list');
+    var last=list.querySelectorAll('.chk-item');
+    if(last.length) last[last.length-1].querySelector('.chk-txt').focus();
+    return;
+  }
+
+  // 배지
+  if(t.classList.contains('badge-tag')||t.classList.contains('badge-desc')){
+    e.preventDefault();
+    var addBtn=t.closest('.card').querySelector('.add-row-btn');
+    if(addBtn) addBtn.click();
+    var list=t.closest('.badge-list');
+    var rows=list.querySelectorAll('.badge-row');
+    if(rows.length) rows[rows.length-1].querySelector('[contenteditable]').focus();
+    return;
+  }
+
+  // 타임라인
+  if(t.classList.contains('tl-title')||t.classList.contains('tl-desc')){
+    if(t.classList.contains('tl-desc')){
+      e.preventDefault();
+      var addBtn=t.closest('.card').querySelector('.add-row-btn');
+      if(addBtn) addBtn.click();
+      var list=t.closest('.tl-list');
+      var items=list.querySelectorAll('.tl-item');
+      if(items.length) items[items.length-1].querySelector('.tl-title').focus();
+    }
+    return;
+  }
+},true);
+
+/* ── 6. 체크리스트 전체 완료/미완료 토글 ── */
+/* 체크리스트 카드 생성 시 전체토글 버튼 삽입 - 기존 makeCardWrap 훅 */
+(function(){
+  var _orig=document.addEventListener;
+  // DOM 변화 감지로 체크리스트 카드에 전체토글 버튼 추가
+  var observer=new MutationObserver(function(muts){
+    muts.forEach(function(m){
+      m.addedNodes.forEach(function(n){
+        if(n.nodeType!==1) return;
+        var lists=n.classList&&n.classList.contains('chk-list')?[n]:Array.from(n.querySelectorAll('.chk-list'));
+        lists.forEach(function(list){
+          if(list.previousElementSibling&&list.previousElementSibling.classList.contains('chk-all-btn')) return;
+          var btn=document.createElement('button');
+          btn.className='chk-all-btn edit-only';
+          btn.textContent='전체 완료';
+          btn.onclick=function(){
+            var items=list.querySelectorAll('.chk-item');
+            var allDone=Array.from(items).every(function(i){return i.classList.contains('done');});
+            items.forEach(function(item){
+              item.classList.toggle('done',!allDone);
+              var cb=item.querySelector('input[type=checkbox]');
+              if(cb) cb.checked=!allDone;
+            });
+            btn.textContent=allDone?'전체 완료':'전체 해제';
+            if(typeof triggerSave==='function') triggerSave();
+          };
+          list.parentNode.insertBefore(btn,list);
+        });
+      });
+    });
+  });
+  observer.observe(document.body,{childList:true,subtree:true});
+})();
+
+/* ── 7. 타임라인 점 클릭 → 색상 순환 ── */
+document.addEventListener('click',function(e){
+  var dot=e.target.closest('.tl-dot');
+  if(!dot) return;
+  if(!document.body.classList.contains('edit-mode')) return;
+  var colors=['blue','yellow','green','red','gray'];
+  var cur=colors.find(function(c){return dot.classList.contains(c);})||'blue';
+  var next=colors[(colors.indexOf(cur)+1)%colors.length];
+  colors.forEach(function(c){dot.classList.remove(c);});
+  dot.classList.add(next);
+  if(typeof triggerSave==='function') triggerSave();
+});
+
+/* ── 8. 테이블 열 너비 드래그 조절 ── */
+(function(){
+  var _col=null;
+  document.addEventListener('mousedown',function(e){
+    var th=e.target.closest('th');
+    if(!th) return;
+    var table=th.closest('table');
+    if(!table) return;
+    if(!document.body.classList.contains('edit-mode')) return;
+    var rect=th.getBoundingClientRect();
+    if(e.clientX<rect.right-6) return; // 오른쪽 6px 영역만
+    e.preventDefault();
+    _col={th:th,startX:e.clientX,startW:th.offsetWidth};
+    document.body.style.cursor='col-resize';
+  });
+  document.addEventListener('mousemove',function(e){
+    if(!_col) return;
+    var dx=e.clientX-_col.startX;
+    var newW=Math.max(50,_col.startW+dx);
+    _col.th.style.width=newW+'px';
+    _col.th.style.minWidth=newW+'px';
+  });
+  document.addEventListener('mouseup',function(){
+    if(!_col) return;
+    document.body.style.cursor='';
+    _col=null;
+    if(typeof triggerSave==='function') triggerSave();
+  });
+  // th에 resize 커서 힌트 (hover)
+  document.addEventListener('mousemove',function(e){
+    var th=e.target.closest('th');
+    if(!th||!document.body.classList.contains('edit-mode')){return;}
+    var rect=th.getBoundingClientRect();
+    th.style.cursor=e.clientX>rect.right-6?'col-resize':'';
+  });
+})();
 </script>
 
 </body>
