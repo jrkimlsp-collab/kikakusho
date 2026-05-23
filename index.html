@@ -2493,7 +2493,12 @@ function buildGanttInner(viewType) {
   var COLORS = ['var(--accent)','var(--green)','var(--purple)','var(--yellow)'];
   var tasks = [['기획','-',0,25,0],['디자인','-',25,37,1],['개발','-',50,37,2]];
   var rows = tasks.map(function(t){
-    return '<tr><td contenteditable>'+t[0]+'</td><td contenteditable>'+t[1]+'</td><td class="gantt-bar-cell"><div class="gantt-bar" style="left:'+t[2]+'%;width:'+t[3]+'%;background:'+COLORS[t[4]]+'" contenteditable>'+t[0]+'</div></td></tr>';
+    return '<tr>'
+      +'<td contenteditable>'+t[0]+'</td>'
+      +'<td contenteditable>'+t[1]+'</td>'
+      +'<td class="gantt-bar-cell"><div class="gantt-bar" style="left:'+t[2]+'%;width:'+t[3]+'%;background:'+COLORS[t[4]]+'" title="드래그: 이동 / 오른쪽 끝: 크기조절 / 더블클릭: 이름 편집">'+t[0]+'</div></td>'
+      +'<td class="edit-only" style="width:28px;text-align:center;padding:2px;border:1px solid var(--border)"><button class="row-del" onclick="this.closest(\'tr\').remove();triggerSave()">×</button></td>'
+      +'</tr>';
   }).join('');
   return '<div class="card-label" contenteditable>간트차트</div>'
     +'<div class="gantt-view-row">'
@@ -2503,10 +2508,19 @@ function buildGanttInner(viewType) {
     +'<button class="gantt-view-tab'+(viewType==='month'?' active':'')+'" onclick="switchGanttView(this,\'month\')">월</button>'
     +'<span class="gantt-view-lbl" style="font-size:11px;color:var(--g3)">'+v.label+' 기준</span>'
     +'</div>'
-    +'<div class="gantt-wrap"><table class="gantt-table">'
-    +'<thead><tr><th style="width:110px">작업</th><th style="width:65px">담당자</th>'
-    +'<th style="padding:0"><div style="display:flex">'+headers+'</div></th>'
-    +'</tr></thead><tbody>'+rows+'</tbody></table></div>'
+    +'<div class="edit-only gantt-period-row">'
+    +'<button class="add-row-btn" style="padding:4px 8px;font-size:11px" onclick="addGanttPeriod(this)">+ 기간 추가</button>'
+    +'<button class="add-row-btn" style="padding:4px 8px;font-size:11px" onclick="delGanttPeriod(this)">− 기간 삭제</button>'
+    +'</div>'
+    +'<div class="gantt-wrap"><table class="gantt-table" data-cols="'+v.cols+'">'
+    +'<thead><tr>'
+    +'<th style="width:110px">작업</th>'
+    +'<th style="width:65px">담당자</th>'
+    +'<th style="padding:0"><div class="gantt-header-cols" style="display:flex">'+headers+'</div></th>'
+    +'<th class="edit-only" style="width:28px;padding:0"></th>'
+    +'</tr></thead>'
+    +'<tbody>'+rows+'</tbody>'
+    +'</table></div>'
     +'<button class="add-row-btn edit-only" onclick="addGanttRow(this)">+ 작업 추가</button>';
 }
 
@@ -2518,14 +2532,12 @@ function switchGanttView(btn, vt) {
   btn.classList.add('active');
   var lbl = card.querySelector('.gantt-view-lbl');
   if(lbl) lbl.textContent = v.label + ' 기준';
-  // 헤더 컬럼 셀: edit-only 삭제 열 이전의 마지막 th
-  var ths = card.querySelectorAll('.gantt-table thead tr th');
-  var th = null;
-  ths.forEach(function(t){ if(!t.classList.contains('edit-only')) th=t; });
-  if(th){
+  // 헤더 컬럼 컨테이너를 직접 찾음 (edit-only 충돌 없음)
+  var hdr = card.querySelector('.gantt-header-cols');
+  if(hdr){
     var h='';
     for(var i=0;i<v.cols;i++) h+='<div class="gantt-col-lbl" style="min-width:'+v.colW+'px;text-align:center;font-size:10px;color:var(--g3);border-right:1px solid var(--border);padding:2px 0">'+(i+1)+v.unit+'</div>';
-    th.innerHTML='<div style="display:flex">'+h+'</div>';
+    hdr.innerHTML=h;
     var table=card.querySelector('.gantt-table');
     if(table) table.dataset.cols=v.cols;
   }
@@ -3989,7 +4001,6 @@ window.openModal=function(id){
 
 /* ── 2. 간트 기간 추가/삭제 ── */
 function _ganttViewUnit(card){
-  // 현재 활성 뷰 탭에서 단위 추출
   var activeTab=card&&card.querySelector('.gantt-view-tab.active');
   if(!activeTab) return '주';
   var t=activeTab.textContent.trim();
@@ -4002,12 +4013,13 @@ function addGanttPeriod(btn){
   cols++;
   table.dataset.cols=cols;
   var unit=_ganttViewUnit(card);
-  // switchGanttView 후 헤더가 재구성됐을 수 있음 → 실제 존재하는 .gantt-header-cols 찾기
-  var hdr=table.querySelector('thead .gantt-header-cols, thead [style*="display:flex"]');
-  if(!hdr) hdr=table.querySelector('.gantt-header-cols');
+  var hdr=card.querySelector('.gantt-header-cols');
   if(hdr){
     var lbl=document.createElement('div');
     lbl.className='gantt-col-lbl';
+    var activeTab=card.querySelector('.gantt-view-tab.active');
+    var colW=activeTab&&activeTab.textContent==='일'?26:activeTab&&activeTab.textContent==='월'?64:44;
+    lbl.style.cssText='min-width:'+colW+'px;text-align:center;font-size:10px;color:var(--g3);border-right:1px solid var(--border);padding:2px 0';
     lbl.textContent=cols+unit;
     hdr.appendChild(lbl);
   }
@@ -4022,8 +4034,7 @@ function delGanttPeriod(btn){
   cols--;
   table.dataset.cols=cols;
   var unit=_ganttViewUnit(card);
-  var hdr=table.querySelector('thead .gantt-header-cols, thead [style*="display:flex"]');
-  if(!hdr) hdr=table.querySelector('.gantt-header-cols');
+  var hdr=card.querySelector('.gantt-header-cols');
   if(hdr && hdr.lastElementChild) hdr.lastElementChild.remove();
   triggerSave();
   toast(cols+unit+'로 변경됨');
