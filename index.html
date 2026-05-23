@@ -2561,21 +2561,7 @@ function toggleCommentMode(){
   document.body.classList.toggle('comment-mode', window._commentMode);
   toast(window._commentMode ? '💬 카드 클릭으로 코멘트 추가' : '코멘트 모드 종료');
 }
-function openColorPanel(){
-  var p=document.getElementById('color-panel');
-  if(p){ p.classList.toggle('open'); }
-  else toast('기능 준비 중');
-}
-function openBannerPresetModal(){
-  var m=document.getElementById('banner-preset-modal');
-  if(m){ m.style.display='flex'; }
-  else toast('기능 준비 중');
-}
-function openStickerPanel(){
-  var p=document.getElementById('sticker-panel');
-  if(p){ p.classList.toggle('open'); }
-  else toast('기능 준비 중');
-}
+/* → openColorPanel / openBannerPresetModal / openStickerPanel : 아래 전체 구현 사용 */
 
 /* ════════════════════════════════════════════
    ── CSS 주입
