@@ -1632,7 +1632,7 @@ function insertCard(sid, type) {
   else if(type==='checklist'){inner=`<div class="card-label" contenteditable>체크리스트</div><div class="chk-list"><div class="chk-item"><input type="checkbox" onchange="this.closest('.chk-item').classList.toggle('done',this.checked)"><span class="chk-txt" contenteditable>항목 내용</span><button class="row-del edit-only" onclick="this.closest('.chk-item').remove()">×</button></div></div><button class="add-row-btn edit-only" onclick="addChkItem(this)">+ 항목 추가</button>`;}
   else if(type==='badge'){inner=`<div class="card-label" contenteditable>배지 목록</div><div class="badge-list"><div class="badge-row"><span class="badge-tag red" contenteditable>배지</span><span class="badge-desc" contenteditable>설명</span><button class="row-del edit-only" onclick="this.closest('.badge-row').remove()">×</button></div></div><button class="add-row-btn edit-only" onclick="addBadgeRow(this)">+ 항목 추가</button>`;}
   else if(type==='free'){inner=`<div class="card-label" contenteditable>자유 형태</div><div class="free-blocks"><div class="free-block"><span contenteditable>텍스트 입력</span><button class="free-block-del edit-only" onclick="this.closest('.free-block').remove()">×</button></div></div><div class="free-add-row edit-only"><button class="free-add-btn" onclick="addFreeBlock(this,'text')">+ 텍스트</button><button class="free-add-btn" onclick="addFreeBlock(this,'img')">+ 이미지</button><button class="free-add-btn" onclick="addFreeBlock(this,'badge')">+ 배지</button><button class="free-add-btn" onclick="addFreeBlock(this,'price')">+ 가격</button><button class="free-add-btn" onclick="addFreeBlock(this,'bitext')">+ KO/JA</button></div>`;}
-  else if(type==='compare'){inner=`<div class="card-label" contenteditable>비교표</div><div style="overflow-x:auto"><table class="cmp-table"><thead><tr><th contenteditable>항목</th><th contenteditable>A안</th><th contenteditable>B안</th><th class="edit-only cmp-th-del"><button onclick="delCmpCol(this)" title="마지막 열 삭제">−</button></th></tr></thead><tbody><tr><td contenteditable>기능 1</td><td contenteditable class="cmp-check" ondblclick="toggleCmpCell(this)">✓</td><td contenteditable class="cmp-x" ondblclick="toggleCmpCell(this)">✗</td><td class="edit-only cmp-row-del-cell"><button class="row-del" onclick="this.closest('tr').remove();triggerSave()">×</button></td></tr><tr><td contenteditable>기능 2</td><td contenteditable ondblclick="toggleCmpCell(this)">-</td><td contenteditable class="cmp-check" ondblclick="toggleCmpCell(this)">✓</td><td class="edit-only cmp-row-del-cell"><button class="row-del" onclick="this.closest('tr').remove();triggerSave()">×</button></td></tr><tr><td contenteditable>가격</td><td contenteditable ondblclick="toggleCmpCell(this)">-</td><td contenteditable ondblclick="toggleCmpCell(this)">-</td><td class="edit-only cmp-row-del-cell"><button class="row-del" onclick="this.closest('tr').remove();triggerSave()">×</button></td></tr></tbody></table></div><div class="edit-only cmp-btns"><button class="add-row-btn" onclick="addCmpRow(this)">+ 행 추가</button><button class="add-row-btn" onclick="addCmpCol(this)">+ 열 추가</button></div>`;}
+  else if(type==='compare'){inner=`<div class="card-label" contenteditable>비교표</div><div style="overflow-x:auto"><table class="cmp-table"><thead><tr><th contenteditable>항목</th><th contenteditable>A안</th><th contenteditable>B안</th><th class="edit-only cmp-th-del"><button onclick="delCmpCol(this)" title="마지막 열 삭제">−</button></th></tr></thead><tbody><tr><td contenteditable>기능 1</td><td contenteditable class="cmp-check" onclick="toggleCmpCell(this)">✓</td><td contenteditable class="cmp-x" onclick="toggleCmpCell(this)">✗</td><td class="edit-only cmp-row-del-cell"><button class="row-del" onclick="this.closest('tr').remove();triggerSave()">×</button></td></tr><tr><td contenteditable>기능 2</td><td contenteditable onclick="toggleCmpCell(this)">-</td><td contenteditable class="cmp-check" onclick="toggleCmpCell(this)">✓</td><td class="edit-only cmp-row-del-cell"><button class="row-del" onclick="this.closest('tr').remove();triggerSave()">×</button></td></tr><tr><td contenteditable>가격</td><td contenteditable onclick="toggleCmpCell(this)">-</td><td contenteditable onclick="toggleCmpCell(this)">-</td><td class="edit-only cmp-row-del-cell"><button class="row-del" onclick="this.closest('tr').remove();triggerSave()">×</button></td></tr></tbody></table></div><div class="edit-only cmp-btns"><button class="add-row-btn" onclick="addCmpRow(this)">+ 행 추가</button><button class="add-row-btn" onclick="addCmpCol(this)">+ 열 추가</button></div>`;}
   else if(type==='palette'){
     const colors=['#4F6BED','#10B981','#F59E0B','#EF4444','#8B5CF6'];
     const swatches=colors.map(c=>`<div class="palette-swatch" style="background:${c}" onclick="editPaletteColor(this)"><span class="palette-hex">${c}</span></div>`).join('');
@@ -1978,7 +1978,7 @@ function addGanttRow(btn){
   const lbl='작업'+(tbody.children.length+1);
   row.innerHTML=`<td contenteditable>${lbl}</td><td contenteditable>-</td><td class="gantt-bar-cell"><div class="gantt-bar" style="left:0%;width:25%;background:${c}" title="드래그: 이동 / 오른쪽 끝 드래그: 크기조절">${lbl}</div></td><td class="edit-only" style="text-align:center;padding:2px"><button class="row-del" onclick="this.closest('tr').remove();triggerSave()">×</button></td>`;
   tbody.appendChild(row);
-  initGanttDrag(row.querySelector('.gantt-bar'));
+  // 드래그는 document 위임 방식이므로 별도 초기화 불필요
   triggerSave();
 }
 
@@ -2176,12 +2176,13 @@ function delCmpCol(btn){
 
 function toggleCmpCell(td){
   if(!document.body.classList.contains('edit-mode')) return;
-  const states=['-','✓','✗'];
   const cur=td.textContent.trim();
-  const idx=states.indexOf(cur);
-  const next=states[(idx+1)%states.length];
+  const states=['-','✓','✗'];
+  // 알려진 값일 때만 토글, 직접 입력한 텍스트면 그냥 편집 허용
+  if(!states.includes(cur)) return;
+  const next=states[(states.indexOf(cur)+1)%states.length];
   td.textContent=next;
-  td.className=td.className.replace(/cmp-check|cmp-x/g,'').trim();
+  td.className=td.className.replace(/\bcmp-check\b|\bcmp-x\b/g,'').trim();
   if(next==='✓') td.classList.add('cmp-check');
   else if(next==='✗') td.classList.add('cmp-x');
   triggerSave();
@@ -3908,33 +3909,35 @@ window.openModal=function(id){
 /* ── 1. 간트 바 드래그 이동 + 리사이즈 ── */
 (function(){
   var _drag=null;
-  function pct(bar,px){
-    var cell=bar.closest('.gantt-bar-cell');
-    if(!cell) return 0;
-    return Math.round(px/cell.offsetWidth*1000)/10;
-  }
   function clamp(v,mn,mx){return Math.max(mn,Math.min(mx,v));}
 
   document.addEventListener('mousedown',function(e){
     var bar=e.target.closest('.gantt-bar');
     if(!bar) return;
     if(!document.body.classList.contains('edit-mode')) return;
-    e.preventDefault();
+    // e.preventDefault() 제거 → td contenteditable 클릭 방해하지 않음
+    // 대신 mousemove에서 threshold(4px) 이상 움직일 때만 드래그 시작
     var cell=bar.closest('.gantt-bar-cell');
-    var rect=cell.getBoundingClientRect();
     var barRect=bar.getBoundingClientRect();
     var startX=e.clientX;
     var startLeft=parseFloat(bar.style.left)||0;
     var startWidth=parseFloat(bar.style.width)||25;
-    // 오른쪽 6px = 리사이즈 핸들
     var isResize=(e.clientX-barRect.right)>-8;
-    bar.classList.add('dragging');
-    _drag={bar,cell,rect,startX,startLeft,startWidth,isResize,cellW:cell.offsetWidth};
+    var started=false;
+    _drag={bar,cell,startX,startLeft,startWidth,isResize,cellW:cell.offsetWidth,started:false};
   });
 
   document.addEventListener('mousemove',function(e){
     if(!_drag) return;
     var dx=e.clientX-_drag.startX;
+    // threshold: 4px 이상 움직여야 드래그 시작 (단순 클릭과 구분)
+    if(!_drag.started){
+      if(Math.abs(dx)<4) return;
+      _drag.started=true;
+      _drag.bar.classList.add('dragging');
+      // 드래그 시작 시에만 텍스트 선택 방지
+      e.preventDefault();
+    }
     var dpct=Math.round(dx/_drag.cellW*1000)/10;
     if(_drag.isResize){
       var newW=clamp(_drag.startWidth+dpct,5,100-_drag.startLeft);
@@ -3948,41 +3951,82 @@ window.openModal=function(id){
   document.addEventListener('mouseup',function(){
     if(!_drag) return;
     _drag.bar.classList.remove('dragging');
+    var wasDrag=_drag.started;
     _drag=null;
-    if(typeof triggerSave==='function') triggerSave();
+    if(wasDrag && typeof triggerSave==='function') triggerSave();
+  });
+
+  // Fix 2: 바 더블클릭 → 이름 인라인 편집
+  document.addEventListener('dblclick',function(e){
+    var bar=e.target.closest('.gantt-bar');
+    if(!bar) return;
+    if(!document.body.classList.contains('edit-mode')) return;
+    e.stopPropagation();
+    var cur=bar.dataset.label||bar.textContent.trim()||'';
+    var inp=document.createElement('input');
+    inp.value=cur;
+    inp.style.cssText='position:absolute;inset:0;width:100%;height:100%;border:none;background:rgba(255,255,255,.95);color:#111;font-size:10px;font-weight:700;padding:0 6px;border-radius:4px;outline:2px solid #fff;z-index:10;box-sizing:border-box;';
+    bar.style.overflow='visible';
+    bar.appendChild(inp);
+    inp.focus();inp.select();
+    function commit(){
+      var v=inp.value.trim()||cur;
+      bar.dataset.label=v;
+      // 텍스트 노드 업데이트 (input 제외)
+      Array.from(bar.childNodes).forEach(function(n){if(n.nodeType===3)n.remove();});
+      bar.insertBefore(document.createTextNode(v),bar.firstChild);
+      inp.remove();
+      bar.style.overflow='hidden';
+      if(typeof triggerSave==='function') triggerSave();
+    }
+    inp.addEventListener('blur',commit);
+    inp.addEventListener('keydown',function(e2){
+      if(e2.key==='Enter'){e2.preventDefault();commit();}
+      if(e2.key==='Escape'){inp.remove();bar.style.overflow='hidden';}
+    });
   });
 })();
 
-/* 초기화: 문서 로드 후 기존 간트 바에도 드래그 적용 (CSS만으로 동작) */
-function initGanttDrag(bar){/* CSS cursor 처리로 충분, mousedown은 delegate */ }
-
 /* ── 2. 간트 기간 추가/삭제 ── */
+function _ganttViewUnit(card){
+  // 현재 활성 뷰 탭에서 단위 추출
+  var activeTab=card&&card.querySelector('.gantt-view-tab.active');
+  if(!activeTab) return '주';
+  var t=activeTab.textContent.trim();
+  return t==='일'?'일':t==='월'?'월':'주';
+}
 function addGanttPeriod(btn){
-  var table=btn.closest('.card').querySelector('.gantt-table');
+  var card=btn.closest('.card');
+  var table=card.querySelector('.gantt-table');
   var cols=parseInt(table.dataset.cols||8);
   cols++;
   table.dataset.cols=cols;
-  var hdr=table.querySelector('.gantt-header-cols');
+  var unit=_ganttViewUnit(card);
+  // switchGanttView 후 헤더가 재구성됐을 수 있음 → 실제 존재하는 .gantt-header-cols 찾기
+  var hdr=table.querySelector('thead .gantt-header-cols, thead [style*="display:flex"]');
+  if(!hdr) hdr=table.querySelector('.gantt-header-cols');
   if(hdr){
     var lbl=document.createElement('div');
     lbl.className='gantt-col-lbl';
-    lbl.textContent=cols+'주';
+    lbl.textContent=cols+unit;
     hdr.appendChild(lbl);
   }
-  // 각 바의 최대 width 제한이 100%이므로 별도 처리 불필요
   triggerSave();
-  toast(cols+'주로 변경됨');
+  toast(cols+unit+'로 변경됨');
 }
 function delGanttPeriod(btn){
-  var table=btn.closest('.card').querySelector('.gantt-table');
+  var card=btn.closest('.card');
+  var table=card.querySelector('.gantt-table');
   var cols=parseInt(table.dataset.cols||8);
-  if(cols<=2){toast('최소 2주는 유지해야 합니다');return;}
+  if(cols<=2){toast('최소 2칸은 유지해야 합니다');return;}
   cols--;
   table.dataset.cols=cols;
-  var hdr=table.querySelector('.gantt-header-cols');
+  var unit=_ganttViewUnit(card);
+  var hdr=table.querySelector('thead .gantt-header-cols, thead [style*="display:flex"]');
+  if(!hdr) hdr=table.querySelector('.gantt-header-cols');
   if(hdr && hdr.lastElementChild) hdr.lastElementChild.remove();
   triggerSave();
-  toast(cols+'주로 변경됨');
+  toast(cols+unit+'로 변경됨');
 }
 
 /* ── 5. Enter 키 → 새 행 추가 ── */
@@ -4028,7 +4072,13 @@ document.addEventListener('keydown',function(e){
 
   // 타임라인
   if(t.classList.contains('tl-title')||t.classList.contains('tl-desc')){
-    if(t.classList.contains('tl-desc')){
+    if(t.classList.contains('tl-title')){
+      // title에서 Enter → 같은 항목의 desc로 포커스
+      e.preventDefault();
+      var desc=t.closest('.tl-item').querySelector('.tl-desc');
+      if(desc) desc.focus();
+    } else {
+      // desc에서 Enter → 새 항목 추가 후 새 title로 포커스
       e.preventDefault();
       var addBtn=t.closest('.card').querySelector('.add-row-btn');
       if(addBtn) addBtn.click();
@@ -4055,6 +4105,11 @@ document.addEventListener('keydown',function(e){
           var btn=document.createElement('button');
           btn.className='chk-all-btn edit-only';
           btn.textContent='전체 완료';
+          function updateBtnText(){
+            var items=list.querySelectorAll('.chk-item');
+            var allDone=items.length>0&&Array.from(items).every(function(i){return i.classList.contains('done');});
+            btn.textContent=allDone?'전체 해제 ✓':'전체 완료';
+          }
           btn.onclick=function(){
             var items=list.querySelectorAll('.chk-item');
             var allDone=Array.from(items).every(function(i){return i.classList.contains('done');});
@@ -4063,9 +4118,11 @@ document.addEventListener('keydown',function(e){
               var cb=item.querySelector('input[type=checkbox]');
               if(cb) cb.checked=!allDone;
             });
-            btn.textContent=allDone?'전체 완료':'전체 해제';
+            updateBtnText();
             if(typeof triggerSave==='function') triggerSave();
           };
+          // 개별 체크박스 변경 시에도 버튼 텍스트 동기화
+          list.addEventListener('change',function(){ updateBtnText(); });
           list.parentNode.insertBefore(btn,list);
         });
       });
@@ -4097,30 +4154,33 @@ document.addEventListener('click',function(e){
     if(!table) return;
     if(!document.body.classList.contains('edit-mode')) return;
     var rect=th.getBoundingClientRect();
-    if(e.clientX<rect.right-6) return; // 오른쪽 6px 영역만
+    if(e.clientX<rect.right-6) return;
     e.preventDefault();
     _col={th:th,startX:e.clientX,startW:th.offsetWidth};
     document.body.style.cursor='col-resize';
+    document.body.style.userSelect='none';
   });
   document.addEventListener('mousemove',function(e){
-    if(!_col) return;
-    var dx=e.clientX-_col.startX;
-    var newW=Math.max(50,_col.startW+dx);
-    _col.th.style.width=newW+'px';
-    _col.th.style.minWidth=newW+'px';
+    if(_col){
+      // 드래그 중
+      var dx=e.clientX-_col.startX;
+      var newW=Math.max(50,_col.startW+dx);
+      _col.th.style.width=newW+'px';
+      _col.th.style.minWidth=newW+'px';
+    } else {
+      // hover cursor hint (리스너 하나로 통합)
+      var th=e.target.closest('th');
+      if(!th||!document.body.classList.contains('edit-mode')) return;
+      var rect=th.getBoundingClientRect();
+      th.style.cursor=e.clientX>rect.right-6?'col-resize':'';
+    }
   });
   document.addEventListener('mouseup',function(){
     if(!_col) return;
     document.body.style.cursor='';
+    document.body.style.userSelect='';
     _col=null;
     if(typeof triggerSave==='function') triggerSave();
-  });
-  // th에 resize 커서 힌트 (hover)
-  document.addEventListener('mousemove',function(e){
-    var th=e.target.closest('th');
-    if(!th||!document.body.classList.contains('edit-mode')){return;}
-    var rect=th.getBoundingClientRect();
-    th.style.cursor=e.clientX>rect.right-6?'col-resize':'';
   });
 })();
 </script>
