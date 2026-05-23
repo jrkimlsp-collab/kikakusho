@@ -3695,23 +3695,28 @@ function renderPickerDesignTab(){
   }).join('');
   var plat=platforms[_curPlatIdx]||platforms[0];
   szEl.innerHTML=(plat.sizes||[]).map(function(s){
-    return '<div class="pb-size-row" onclick="insertBannerCardFromPicker(''+s.n.replace(/'/g,"\'")+'','+s.w+','+s.h+')">'
+    var safeName=s.n.replace(/\\/g,'\\\\').replace(/'/g,"\\'");
+    return '<div class="pb-size-row" onclick="insertBannerCardFromPicker(\''+safeName+'\','+s.w+','+s.h+')">'
       +'<span class="pb-size-name">'+s.n+'</span>'
       +'<span class="pb-size-dim">'+s.w+' × '+s.h+'</span>'
       +'</div>';
   }).join('');
-  /* 스티커 */
   var stkEl=document.getElementById('picker-sticker-area');
   if(stkEl){
-    var SD=[{t:'SALE',c:'#E8001B'},{t:'OFF',c:'#E8001B'},{t:'NEW',c:'#10B981'},
+    var SD=[
+      {t:'SALE',c:'#E8001B'},{t:'OFF',c:'#E8001B'},{t:'NEW',c:'#10B981'},
       {t:'限定',c:'#4F6BED'},{t:'人気',c:'#4F6BED'},{t:'メガ割',c:'#8B5CF6'},
-      {t:'送料無料',c:'#F59E0B'},{t:'🏆 1位',c:'#F59E0B'},{t:'期間限定',c:'#EF4444'}];
+      {t:'送料無料',c:'#F59E0B'},{t:'\U0001f3c6 1位',c:'#F59E0B'},{t:'期間限定',c:'#EF4444'}
+    ];
     stkEl.innerHTML='<div class="picker-sticker-chips">'
-      +SD.map(function(s){return '<div class="ps-chip" style="background:'+s.c+'" onclick="insertStickerCardFromPicker(''+s.t+'',''+s.c+'')">'+s.t+'</div>';}).join('')
+      +SD.map(function(s){
+        var st=s.t.replace(/\\/g,'\\\\').replace(/'/g,"\\'");
+        return '<div class="ps-chip" style="background:'+s.c+'" onclick="insertStickerCardFromPicker(\''+st+'\',\''+s.c+'\')">'+s.t+'</div>';
+      }).join('')
       +'</div>'
       +'<div style="display:flex;gap:5px;margin-top:6px">'
       +'<input id="ps-ctxt" placeholder="커스텀 텍스트" style="flex:1;padding:6px 9px;border:1.5px solid var(--border);border-radius:7px;font-size:12px;font-family:inherit;outline:none;background:var(--white);color:var(--dark)">'
-      +'<button onclick="insertStickerCardFromPicker(document.getElementById('ps-ctxt').value,'#4F6BED')" style="padding:6px 12px;background:var(--accent);color:#fff;border:none;border-radius:7px;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit">추가</button>'
+      +'<button onclick="insertStickerCardFromPicker(document.getElementById(\'ps-ctxt\').value,\'#4F6BED\')" style="padding:6px 12px;background:var(--accent);color:#fff;border:none;border-radius:7px;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit">추가</button>'
       +'</div>';
   }
 }
