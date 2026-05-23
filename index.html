@@ -783,32 +783,83 @@ body.readonly-mode [contenteditable]{pointer-events:none;}
 
 <!-- 카드 피커 모달 -->
 <div class="modal-bg" id="card-picker-modal">
-  <div class="modal-box" style="max-width:560px">
+  <div class="modal-box" style="max-width:600px">
     <div class="modal-handle"></div>
-    <div class="modal-title">카드 타입 선택</div>
-    <div class="picker-grid">
-      <button class="picker-btn" onclick="pickCard('text')"><div class="ld"><div class="ld-text-block"><div class="ld-h"></div><div class="ld-p w80"></div><div class="ld-p w60"></div></div></div><div class="picker-lbl">텍스트</div></button>
-      <button class="picker-btn" onclick="pickCard('kv')"><div class="ld"><div class="ld-cols"><div class="ld-col"><div class="ld-p w60"></div><div class="ld-p w60"></div><div class="ld-p w60"></div></div><div class="ld-col"><div class="ld-p"></div><div class="ld-p"></div><div class="ld-p"></div></div></div></div><div class="picker-lbl">정보표</div></button>
-      <button class="picker-btn" onclick="pickCard('tags')"><div class="ld" style="flex-wrap:wrap;gap:3px;align-content:flex-start;padding:5px"><div class="ld-badge"></div><div class="ld-badge"></div><div class="ld-badge"></div><div class="ld-badge" style="width:20px"></div></div><div class="picker-lbl">태그</div></button>
-      <button class="picker-btn" onclick="pickCard('timeline')"><div class="ld"><div class="ld-tl"><div class="ld-tl-row"><div class="ld-dot"></div><div class="ld-tl-line"></div></div><div class="ld-tl-row"><div class="ld-dot"></div><div class="ld-tl-line"></div></div><div class="ld-tl-row"><div class="ld-dot"></div><div class="ld-tl-line"></div></div></div></div><div class="picker-lbl">타임라인</div></button>
-      <button class="picker-btn" onclick="pickCard('product-a')"><div class="ld"><div class="ld-img-side"></div><div class="ld-right" style="padding-left:4px"><div class="ld-h" style="margin-bottom:4px"></div><div class="ld-p"></div><div class="ld-p w60"></div><div class="ld-badge" style="margin-top:3px;width:36px;height:7px"></div></div></div><div class="picker-lbl">상품 카드</div></button>
-      <button class="picker-btn" onclick="pickCard('product-grid')"><div class="ld"><div class="ld-grid3"><div class="ld-cell img"></div><div class="ld-cell img"></div><div class="ld-cell img"></div></div></div><div class="picker-lbl">상품 목록</div></button>
-      <button class="picker-btn" onclick="pickCard('img-text')"><div class="ld"><div class="ld-img-side"></div><div class="ld-right" style="padding-left:4px"><div class="ld-p"></div><div class="ld-p w80"></div><div class="ld-p w60"></div></div></div><div class="picker-lbl">이미지+텍스트</div></button>
-      <button class="picker-btn" onclick="pickCard('img-grid')"><div class="ld"><div class="ld-grid3"><div class="ld-cell img"></div><div class="ld-cell img"></div><div class="ld-cell img"></div></div></div><div class="picker-lbl">이미지 그리드</div></button>
-      <button class="picker-btn" onclick="pickCard('img-full')"><div class="ld"><div class="ld-img-big"></div></div><div class="picker-lbl">이미지</div></button>
-      <button class="picker-btn" onclick="pickCard('ref')"><div class="ld"><div class="ld-ref"><div class="ld-ref-img"></div><div class="ld-ref-img"></div><div class="ld-ref-img"></div><div class="ld-ref-img"></div></div></div><div class="picker-lbl">레퍼런스</div></button>
-      <button class="picker-btn" onclick="pickCard('kpi')"><div class="ld"><div class="ld-kpi"><div class="ld-kpi-item"><span class="ld-kpi-num">60%</span></div><div class="ld-kpi-item"><span class="ld-kpi-num">990</span></div><div class="ld-kpi-item"><span class="ld-kpi-num">3종</span></div></div></div><div class="picker-lbl">수치 강조</div></button>
-      <button class="picker-btn" onclick="pickCard('flow')"><div class="ld"><div class="ld-flow"><div class="ld-flow-pill"></div><span class="ld-flow-arr">→</span><div class="ld-flow-pill"></div><span class="ld-flow-arr">→</span><div class="ld-flow-pill"></div></div></div><div class="picker-lbl">플로우</div></button>
-      <button class="picker-btn" onclick="pickCard('checklist')"><div class="ld"><div class="ld-chk"><div class="ld-chk-row"><div class="ld-chk-box"></div><div class="ld-chk-txt"></div></div><div class="ld-chk-row"><div class="ld-chk-box"></div><div class="ld-chk-txt"></div></div><div class="ld-chk-row"><div class="ld-chk-box"></div><div class="ld-chk-txt"></div></div></div></div><div class="picker-lbl">체크리스트</div></button>
-      <button class="picker-btn" onclick="pickCard('badge')"><div class="ld" style="flex-direction:column;gap:3px;padding:5px"><div style="display:flex;gap:3px;align-items:center"><div class="ld-badge" style="width:22px;height:7px"></div><div class="ld-p" style="flex:1;height:5px"></div></div><div style="display:flex;gap:3px;align-items:center"><div class="ld-badge" style="width:22px;height:7px;background:var(--yellow)"></div><div class="ld-p" style="flex:1;height:5px"></div></div></div><div class="picker-lbl">배지 목록</div></button>
-      <button class="picker-btn" onclick="pickCard('free')"><div class="ld"><div class="ld-free"><div class="ld-free-row"><div class="ld-free-img"></div><div class="ld-free-txt"></div></div><div class="ld-free-row"><div class="ld-free-txt" style="width:100%"></div></div><div class="ld-free-row"><div class="ld-badge" style="width:22px;height:7px"></div><div class="ld-free-txt"></div></div></div></div><div class="picker-lbl">자유 형태</div></button>
-      <button class="picker-btn" onclick="pickCard('compare')"><div class="ld" style="flex-direction:column;gap:2px;padding:4px"><div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:2px"><div style="background:var(--g2);height:7px;border-radius:2px"></div><div style="background:var(--accent);height:7px;border-radius:2px;opacity:.5"></div><div style="background:var(--g2);height:7px;border-radius:2px;opacity:.4"></div></div><div style="height:5px;background:var(--g1);border-radius:1px"></div><div style="height:5px;background:var(--g1);border-radius:1px"></div></div><div class="picker-lbl">비교표</div></button>
-      <button class="picker-btn" onclick="pickCard('palette')"><div class="ld" style="gap:2px;padding:4px"><div style="flex:1;background:#4F6BED;border-radius:3px;height:22px"></div><div style="flex:1;background:#10B981;border-radius:3px;height:22px"></div><div style="flex:1;background:#F59E0B;border-radius:3px;height:22px"></div><div style="flex:1;background:#EF4444;border-radius:3px;height:22px"></div></div><div class="picker-lbl">컬러 팔레트</div></button>
-      <button class="picker-btn" onclick="pickCard('embed')"><div class="ld" style="padding:4px"><div style="width:100%;background:var(--g1);border-radius:4px;height:30px;display:flex;align-items:center;justify-content:center"><div style="width:12px;height:12px;background:var(--accent);border-radius:50%;opacity:.6"></div></div></div><div class="picker-lbl">영상 임베드</div></button>
-      <button class="picker-btn" onclick="pickCard('gantt')"><div class="ld" style="flex-direction:column;gap:2px;padding:4px"><div style="height:6px;background:var(--g2);border-radius:2px;width:100%"></div><div style="height:6px;background:var(--accent);border-radius:2px;width:70%;opacity:.7"></div><div style="height:6px;background:var(--green);border-radius:2px;width:50%;margin-left:20%;opacity:.7"></div><div style="height:6px;background:var(--yellow);border-radius:2px;width:40%;margin-left:40%;opacity:.7"></div></div><div class="picker-lbl">간트차트</div></button>
-      <button class="picker-btn" onclick="pickCard('chart')"><div class="ld" style="align-items:flex-end;gap:4px;padding:6px 8px"><div style="width:12px;background:var(--accent);border-radius:2px 2px 0 0;height:24px;opacity:.8"></div><div style="width:12px;background:var(--accent);border-radius:2px 2px 0 0;height:16px;opacity:.6"></div><div style="width:12px;background:var(--accent);border-radius:2px 2px 0 0;height:20px;opacity:.7"></div><div style="width:12px;background:var(--accent);border-radius:2px 2px 0 0;height:12px;opacity:.5"></div></div><div class="picker-lbl">차트</div></button>
+    <div class="modal-title">카드 추가</div>
+    <!-- 카테고리 탭 -->
+    <div class="picker-cat-tabs" id="picker-cat-tabs">
+      <button class="picker-cat active" data-cat="basic" onclick="switchPickerCat('basic',this)">📝 기본</button>
+      <button class="picker-cat" data-cat="schedule" onclick="switchPickerCat('schedule',this)">📅 일정</button>
+      <button class="picker-cat" data-cat="media" onclick="switchPickerCat('media',this)">🖼 미디어</button>
+      <button class="picker-cat" data-cat="product" onclick="switchPickerCat('product',this)">🛒 상품</button>
+      <button class="picker-cat" data-cat="design" onclick="switchPickerCat('design',this)">🎨 디자인</button>
+      <button class="picker-cat" data-cat="data" onclick="switchPickerCat('data',this)">📊 데이터</button>
     </div>
-    <div style="display:flex;gap:8px;margin-top:4px">
+    <!-- 기본 -->
+    <div class="picker-cat-panel active" data-cat="basic">
+      <div class="picker-grid">
+        <button class="picker-btn" onclick="pickCard('text')"><div class="ld"><div class="ld-text-block"><div class="ld-h"></div><div class="ld-p w80"></div><div class="ld-p w60"></div></div></div><div class="picker-lbl">텍스트</div></button>
+        <button class="picker-btn" onclick="pickCard('kv')"><div class="ld"><div class="ld-cols"><div class="ld-col"><div class="ld-p w60"></div><div class="ld-p w60"></div></div><div class="ld-col"><div class="ld-p"></div><div class="ld-p"></div></div></div></div><div class="picker-lbl">정보표</div></button>
+        <button class="picker-btn" onclick="pickCard('kpi')"><div class="ld"><div class="ld-kpi"><div class="ld-kpi-item"><span class="ld-kpi-num">60%</span></div><div class="ld-kpi-item"><span class="ld-kpi-num">990</span></div></div></div><div class="picker-lbl">수치 강조</div></button>
+        <button class="picker-btn" onclick="pickCard('tags')"><div class="ld" style="flex-wrap:wrap;gap:3px;align-content:flex-start;padding:5px"><div class="ld-badge"></div><div class="ld-badge"></div><div class="ld-badge"></div></div><div class="picker-lbl">태그</div></button>
+        <button class="picker-btn" onclick="pickCard('badge')"><div class="ld" style="flex-direction:column;gap:3px;padding:5px"><div style="display:flex;gap:3px;align-items:center"><div class="ld-badge" style="width:22px;height:7px"></div><div class="ld-p" style="flex:1;height:5px"></div></div><div style="display:flex;gap:3px;align-items:center"><div class="ld-badge" style="width:22px;height:7px;background:var(--yellow)"></div><div class="ld-p" style="flex:1;height:5px"></div></div></div><div class="picker-lbl">배지 목록</div></button>
+        <button class="picker-btn" onclick="pickCard('checklist')"><div class="ld"><div class="ld-chk"><div class="ld-chk-row"><div class="ld-chk-box"></div><div class="ld-chk-txt"></div></div><div class="ld-chk-row"><div class="ld-chk-box"></div><div class="ld-chk-txt"></div></div></div></div><div class="picker-lbl">체크리스트</div></button>
+        <button class="picker-btn" onclick="pickCard('flow')"><div class="ld"><div class="ld-flow"><div class="ld-flow-pill"></div><span class="ld-flow-arr">→</span><div class="ld-flow-pill"></div><span class="ld-flow-arr">→</span><div class="ld-flow-pill"></div></div></div><div class="picker-lbl">플로우</div></button>
+        <button class="picker-btn" onclick="pickCard('compare')"><div class="ld" style="flex-direction:column;gap:2px;padding:4px"><div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:2px"><div style="background:var(--g2);height:7px;border-radius:2px"></div><div style="background:var(--accent);height:7px;border-radius:2px;opacity:.5"></div><div style="background:var(--g2);height:7px;border-radius:2px;opacity:.4"></div></div><div style="height:5px;background:var(--g1);border-radius:1px"></div><div style="height:5px;background:var(--g1);border-radius:1px"></div></div><div class="picker-lbl">비교표</div></button>
+        <button class="picker-btn" onclick="pickCard('free')"><div class="ld"><div class="ld-free"><div class="ld-free-row"><div class="ld-free-img"></div><div class="ld-free-txt"></div></div><div class="ld-free-row"><div class="ld-free-txt" style="width:100%"></div></div></div></div><div class="picker-lbl">자유 형태</div></button>
+      </div>
+    </div>
+    <!-- 일정 -->
+    <div class="picker-cat-panel" data-cat="schedule">
+      <div class="picker-section-lbl">간트차트 (기간별)</div>
+      <div class="picker-grid">
+        <button class="picker-btn" onclick="pickCard('gantt-day')"><div class="ld" style="flex-direction:column;gap:2px;padding:4px"><div style="font-size:8px;color:var(--g3);margin-bottom:2px;font-weight:700">일(Day)</div><div style="height:5px;background:var(--accent);border-radius:2px;width:40%;opacity:.8"></div><div style="height:5px;background:var(--green);border-radius:2px;width:30%;margin-left:20%;opacity:.7"></div><div style="height:5px;background:var(--yellow);border-radius:2px;width:50%;margin-left:10%;opacity:.6"></div></div><div class="picker-lbl">간트 — 일</div></button>
+        <button class="picker-btn" onclick="pickCard('gantt-week')"><div class="ld" style="flex-direction:column;gap:2px;padding:4px"><div style="font-size:8px;color:var(--g3);margin-bottom:2px;font-weight:700">주(Week)</div><div style="height:5px;background:var(--accent);border-radius:2px;width:60%;opacity:.8"></div><div style="height:5px;background:var(--green);border-radius:2px;width:40%;margin-left:30%;opacity:.7"></div><div style="height:5px;background:var(--purple);border-radius:2px;width:35%;margin-left:40%;opacity:.6"></div></div><div class="picker-lbl">간트 — 주</div></button>
+        <button class="picker-btn" onclick="pickCard('gantt-month')"><div class="ld" style="flex-direction:column;gap:2px;padding:4px"><div style="font-size:8px;color:var(--g3);margin-bottom:2px;font-weight:700">월(Month)</div><div style="height:5px;background:var(--accent);border-radius:2px;width:80%;opacity:.8"></div><div style="height:5px;background:var(--green);border-radius:2px;width:60%;margin-left:20%;opacity:.7"></div><div style="height:5px;background:var(--red);border-radius:2px;width:40%;margin-left:35%;opacity:.6"></div></div><div class="picker-lbl">간트 — 월</div></button>
+      </div>
+      <div class="picker-section-lbl" style="margin-top:10px">캘린더</div>
+      <div class="picker-grid">
+        <button class="picker-btn" onclick="pickCard('cal-day')"><div class="ld" style="flex-direction:column;gap:1px;padding:4px"><div style="font-size:8px;font-weight:700;color:var(--g3)">일</div><div style="flex:1;background:var(--g1);border-radius:3px;display:flex;flex-direction:column;gap:1px;padding:2px"><div style="height:5px;background:var(--accent);border-radius:2px;opacity:.6"></div><div style="height:5px;background:var(--green);border-radius:2px;opacity:.5"></div></div></div><div class="picker-lbl">캘린더 — 일</div></button>
+        <button class="picker-btn" onclick="pickCard('cal-week')"><div class="ld" style="flex-direction:column;gap:1px;padding:4px"><div style="display:grid;grid-template-columns:repeat(7,1fr);gap:1px"><div style="height:5px;background:var(--g2);border-radius:1px"></div><div style="height:5px;background:var(--accent);border-radius:1px;opacity:.7"></div><div style="height:5px;background:var(--g2);border-radius:1px"></div><div style="height:5px;background:var(--green);border-radius:1px;opacity:.6"></div><div style="height:5px;background:var(--g2);border-radius:1px"></div><div style="height:5px;background:var(--yellow);border-radius:1px;opacity:.6"></div><div style="height:5px;background:var(--g2);border-radius:1px"></div></div><div style="flex:1;background:var(--g1);border-radius:3px;margin-top:2px"></div></div><div class="picker-lbl">캘린더 — 주</div></button>
+        <button class="picker-btn" onclick="pickCard('cal-month')"><div class="ld" style="flex-direction:column;gap:1px;padding:4px"><div style="display:grid;grid-template-columns:repeat(7,1fr);gap:1px;margin-bottom:2px">${Array.from({length:7},(_,i)=>`<div style="height:4px;background:var(--g2);border-radius:1px;font-size:6px;text-align:center;overflow:hidden">${["일","월","화","수","목","금","토"][i]}</div>`).join("")}</div><div style="display:grid;grid-template-columns:repeat(7,1fr);gap:1px">${Array.from({length:35},(_,i)=>`<div style="height:5px;background:${i%7===0||i%7===6?'var(--g1)':'var(--g2)'};border-radius:1px;opacity:.7"></div>`).join("")}</div></div><div class="picker-lbl">캘린더 — 월</div></button>
+      </div>
+      <div class="picker-section-lbl" style="margin-top:10px">기타</div>
+      <div class="picker-grid">
+        <button class="picker-btn" onclick="pickCard('timeline')"><div class="ld"><div class="ld-tl"><div class="ld-tl-row"><div class="ld-dot"></div><div class="ld-tl-line"></div></div><div class="ld-tl-row"><div class="ld-dot"></div><div class="ld-tl-line"></div></div></div></div><div class="picker-lbl">타임라인</div></button>
+      </div>
+    </div>
+    <!-- 미디어 -->
+    <div class="picker-cat-panel" data-cat="media">
+      <div class="picker-grid">
+        <button class="picker-btn" onclick="pickCard('img-full')"><div class="ld"><div class="ld-img-big"></div></div><div class="picker-lbl">이미지</div></button>
+        <button class="picker-btn" onclick="pickCard('img-text')"><div class="ld"><div class="ld-img-side"></div><div class="ld-right" style="padding-left:4px"><div class="ld-p"></div><div class="ld-p w80"></div></div></div><div class="picker-lbl">이미지+텍스트</div></button>
+        <button class="picker-btn" onclick="pickCard('img-grid')"><div class="ld"><div class="ld-grid3"><div class="ld-cell img"></div><div class="ld-cell img"></div><div class="ld-cell img"></div></div></div><div class="picker-lbl">이미지 그리드</div></button>
+        <button class="picker-btn" onclick="pickCard('ref')"><div class="ld"><div class="ld-ref"><div class="ld-ref-img"></div><div class="ld-ref-img"></div><div class="ld-ref-img"></div><div class="ld-ref-img"></div></div></div><div class="picker-lbl">레퍼런스</div></button>
+        <button class="picker-btn" onclick="pickCard('embed')"><div class="ld" style="padding:4px"><div style="width:100%;background:var(--g1);border-radius:4px;height:30px;display:flex;align-items:center;justify-content:center"><div style="width:12px;height:12px;background:var(--accent);border-radius:50%;opacity:.6"></div></div></div><div class="picker-lbl">영상 임베드</div></button>
+      </div>
+    </div>
+    <!-- 상품 -->
+    <div class="picker-cat-panel" data-cat="product">
+      <div class="picker-grid">
+        <button class="picker-btn" onclick="pickCard('product-a')"><div class="ld"><div class="ld-img-side"></div><div class="ld-right" style="padding-left:4px"><div class="ld-h" style="margin-bottom:4px"></div><div class="ld-p"></div><div class="ld-badge" style="margin-top:3px;width:36px;height:7px"></div></div></div><div class="picker-lbl">상품 카드</div></button>
+        <button class="picker-btn" onclick="pickCard('product-grid')"><div class="ld"><div class="ld-grid3"><div class="ld-cell img"></div><div class="ld-cell img"></div><div class="ld-cell img"></div></div></div><div class="picker-lbl">상품 목록</div></button>
+      </div>
+    </div>
+    <!-- 디자인 -->
+    <div class="picker-cat-panel" data-cat="design">
+      <div class="picker-grid">
+        <button class="picker-btn" onclick="pickCard('palette')"><div class="ld" style="gap:2px;padding:4px"><div style="flex:1;background:#4F6BED;border-radius:3px;height:22px"></div><div style="flex:1;background:#10B981;border-radius:3px;height:22px"></div><div style="flex:1;background:#F59E0B;border-radius:3px;height:22px"></div><div style="flex:1;background:#EF4444;border-radius:3px;height:22px"></div></div><div class="picker-lbl">컬러 팔레트</div></button>
+        <button class="picker-btn" onclick="insertBannerSizeCard('배너',1200,400)"><div class="ld" style="padding:4px"><div style="width:100%;background:var(--g1);border:1.5px dashed var(--g3);border-radius:4px;height:28px;display:flex;align-items:center;justify-content:center;font-size:8px;color:var(--g3);font-weight:700">1200×400</div></div><div class="picker-lbl">배너 카드</div></button>
+        <button class="picker-btn" onclick="openBannerPresetModal()"><div class="ld" style="padding:4px;flex-direction:column;gap:2px"><div style="display:grid;grid-template-columns:1fr 1fr;gap:2px"><div style="background:var(--g2);height:12px;border-radius:2px"></div><div style="background:var(--accent);height:12px;border-radius:2px;opacity:.5"></div><div style="background:var(--green);height:12px;border-radius:2px;opacity:.4"></div><div style="background:var(--yellow);height:12px;border-radius:2px;opacity:.5"></div></div></div><div class="picker-lbl">배너 Preset ↗</div></button>
+      </div>
+    </div>
+    <!-- 데이터 -->
+    <div class="picker-cat-panel" data-cat="data">
+      <div class="picker-grid">
+        <button class="picker-btn" onclick="pickCard('chart')"><div class="ld" style="align-items:flex-end;gap:4px;padding:6px 8px"><div style="width:12px;background:var(--accent);border-radius:2px 2px 0 0;height:24px;opacity:.8"></div><div style="width:12px;background:var(--accent);border-radius:2px 2px 0 0;height:16px;opacity:.6"></div><div style="width:12px;background:var(--accent);border-radius:2px 2px 0 0;height:20px;opacity:.7"></div><div style="width:12px;background:var(--accent);border-radius:2px 2px 0 0;height:12px;opacity:.5"></div></div><div class="picker-lbl">차트</div></button>
+      </div>
+    </div>
+    <div style="display:flex;gap:8px;margin-top:12px">
       <button class="modal-cancel" style="flex:1" onclick="closeModal('card-picker-modal')">취소</button>
       <button class="modal-ok" style="flex:1;background:var(--g1);color:var(--dark);border:1px solid var(--border)" onclick="closeModal('card-picker-modal');openTemplateModal('load')">📋 내 템플릿</button>
     </div>
@@ -858,8 +909,7 @@ body.readonly-mode [contenteditable]{pointer-events:none;}
   <!-- 왼쪽: 로고 + 참여자 -->
   <div class="tb-left">
     <div class="tb-logo">기획서</div>
-    <button class="me-badge" id="me-badge" onclick="openNameModal()" title="참여자 변경">나</button>
-    <div class="editors-bar" id="editors-bar"></div>
+    <div class="editors-bar" id="editors-bar" style="display:none"></div>
     <div class="sync-badge local" id="sync-badge"><div class="sync-dot"></div><span id="sync-txt">로컬</span></div>
   </div>
   <!-- 가운데: 모드·언어 -->
@@ -880,7 +930,27 @@ body.readonly-mode [contenteditable]{pointer-events:none;}
       <button class="search-mini-btn" onclick="toggleSearch()">✕</button>
     </div>
   </div>
-  <!-- 오른쪽: 주요 액션만 -->
+  <!-- 오른쪽: 참여자 + 주요 액션 -->
+  <div class="participant-wrap" id="participant-wrap">
+    <div class="participant-area" id="participant-area"></div>
+    <div class="participant-dropdown" id="participant-dropdown">
+      <div class="pd-header">
+        <div class="pd-me-row">
+          <div class="pd-me-avatar" id="pd-me-avatar"></div>
+          <div>
+            <div class="pd-me-name" id="pd-me-name">나</div>
+            <div class="pd-me-sub">나의 계정</div>
+          </div>
+        </div>
+      </div>
+      <button class="pd-btn" onclick="openNameModal();closeParticipantDropdown()">✏️ 참여자 변경</button>
+      <div class="pd-sep"></div>
+      <div class="pd-online-section">
+        <div class="pd-online-lbl">지금 편집 중</div>
+        <div class="pd-online-list" id="pd-online-list"><div style="font-size:12px;color:var(--g3)">나 혼자</div></div>
+      </div>
+    </div>
+  </div>
   <div class="tb-right">
     <button class="icon-btn tb-icon-only" onclick="toggleSearch()" title="검색">⌕</button>
     <button class="icon-btn tb-icon-only" onclick="toggleToc()" title="목차">☰</button>
@@ -2348,4 +2418,542 @@ window.addEventListener('load', ()=>{
   initNavTabDrag();
   updateMeBadge();
 });
+</script>
+<style>
+/* ── 참여자 아바타 (구글 스타일) ── */
+.participant-area {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  margin-right: 4px;
+}
+.p-avatar {
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  border: 2px solid var(--white);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; font-weight: 700; color: #fff;
+  margin-left: -8px;
+  cursor: pointer;
+  position: relative;
+  box-shadow: 0 0 0 1.5px rgba(0,0,0,.08);
+  transition: transform .15s, z-index .15s;
+  z-index: 1;
+  flex-shrink: 0;
+  text-transform: uppercase;
+  user-select: none;
+}
+.p-avatar:first-child { margin-left: 0; }
+.p-avatar:hover { transform: scale(1.15); z-index: 10; }
+.p-avatar.is-me {
+  width: 34px; height: 34px;
+  border: 2.5px solid var(--white);
+  box-shadow: 0 0 0 2px var(--accent), 0 2px 8px rgba(0,0,0,.12);
+  z-index: 5;
+}
+.p-avatar.is-me::after {
+  content: '';
+  position: absolute; bottom: 0; right: 0;
+  width: 9px; height: 9px;
+  background: var(--green);
+  border-radius: 50%;
+  border: 1.5px solid var(--white);
+}
+/* 호버 툴팁 */
+.p-avatar-tip {
+  display: none;
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%; transform: translateX(-50%);
+  background: var(--dark); color: #fff;
+  font-size: 11px; font-weight: 500;
+  padding: 4px 9px; border-radius: 7px;
+  white-space: nowrap; pointer-events: none;
+  z-index: 100;
+}
+.p-avatar-tip::after {
+  content: '';
+  position: absolute; top: 100%; left: 50%; transform: translateX(-50%);
+  border: 4px solid transparent;
+  border-top-color: var(--dark);
+}
+.p-avatar:hover .p-avatar-tip { display: block; }
+/* 드롭다운 */
+.participant-dropdown {
+  display: none;
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  box-shadow: 0 8px 32px rgba(0,0,0,.12);
+  min-width: 220px;
+  padding: 8px 0;
+  z-index: 600;
+}
+.participant-dropdown.open { display: block; }
+.pd-header {
+  padding: 12px 16px 10px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 6px;
+}
+.pd-me-row {
+  display: flex; align-items: center; gap: 10px;
+}
+.pd-me-avatar {
+  width: 40px; height: 40px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px; font-weight: 700; color: #fff;
+  flex-shrink: 0;
+}
+.pd-me-name { font-size: 14px; font-weight: 700; color: var(--dark); }
+.pd-me-sub { font-size: 11px; color: var(--g3); margin-top: 1px; }
+.pd-btn {
+  display: block; width: 100%;
+  padding: 9px 16px; border: none; background: none;
+  font-size: 13px; color: var(--dark);
+  text-align: left; cursor: pointer; font-family: inherit;
+  transition: background .1s;
+}
+.pd-btn:hover { background: var(--g1); }
+.pd-sep { height: 1px; background: var(--border); margin: 5px 0; }
+.pd-online-section { padding: 4px 16px 6px; }
+.pd-online-lbl { font-size: 10px; font-weight: 700; color: var(--g3); letter-spacing: .06em; text-transform: uppercase; margin-bottom: 6px; }
+.pd-online-list { display: flex; flex-direction: column; gap: 5px; }
+.pd-online-item { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--dark); }
+.pd-online-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green); flex-shrink: 0; }
+.pd-online-avatar { width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 9px; font-weight: 700; color: #fff; flex-shrink: 0; }
+
+/* tb-right에 participant-area 자리 확보 */
+.participant-wrap { position: relative; display: flex; align-items: center; }
+</style>
+<style>
+/* ── 카드 피커 탭 ── */
+.picker-cat-tabs {
+  display: flex; gap: 4px; flex-wrap: wrap;
+  margin-bottom: 14px; padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+}
+.picker-cat {
+  padding: 6px 12px; border: 1px solid var(--border);
+  border-radius: 20px; font-size: 12px; font-weight: 600;
+  cursor: pointer; background: var(--white); color: var(--g4);
+  transition: all .15s; font-family: inherit;
+}
+.picker-cat.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+.picker-cat-panel { display: none; }
+.picker-cat-panel.active { display: block; }
+.picker-section-lbl {
+  font-size: 10px; font-weight: 700; color: var(--g3);
+  letter-spacing: .07em; text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+/* ── 캘린더 카드 ── */
+.cal-card-wrap { width: 100%; }
+.cal-view-tabs { display: flex; gap: 4px; margin-bottom: 10px; }
+.cal-view-tab { padding: 4px 10px; border: 1px solid var(--border); border-radius: 6px; font-size: 11px; font-weight: 700; cursor: pointer; background: var(--white); color: var(--g4); font-family: inherit; transition: .15s; }
+.cal-view-tab.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+.cal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+.cal-nav { background: none; border: 1px solid var(--border); border-radius: 6px; padding: 3px 9px; cursor: pointer; font-size: 13px; color: var(--g4); }
+.cal-title { font-size: 13px; font-weight: 700; color: var(--dark); }
+.cal-grid-month { display: grid; grid-template-columns: repeat(7,1fr); gap: 2px; }
+.cal-dow { text-align: center; font-size: 10px; font-weight: 700; color: var(--g3); padding: 4px 0; }
+.cal-dow.sun { color: var(--red); }
+.cal-dow.sat { color: var(--accent); }
+.cal-day { min-height: 52px; border: 1px solid var(--border); border-radius: 5px; padding: 3px; cursor: pointer; position: relative; }
+.cal-day:hover { background: var(--al); }
+.cal-day.today { background: var(--al); border-color: var(--accent); }
+.cal-day.other-month .cal-day-num { color: var(--g3); }
+.cal-day-num { font-size: 11px; font-weight: 600; color: var(--dark); }
+.cal-event { font-size: 9px; padding: 1px 4px; border-radius: 3px; margin-top: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: 600; }
+/* 주간 */
+.cal-week-grid { display: grid; grid-template-columns: 50px repeat(7,1fr); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+.cal-week-hd { font-size: 10px; font-weight: 700; text-align: center; padding: 5px 2px; background: var(--g1); color: var(--g4); border-bottom: 1px solid var(--border); }
+.cal-week-time { font-size: 9px; color: var(--g3); padding: 2px 5px; border-right: 1px solid var(--border); border-bottom: 1px solid var(--g1); min-height: 28px; }
+.cal-week-cell { border-right: 1px solid var(--border); border-bottom: 1px solid var(--g1); min-height: 28px; position: relative; }
+.cal-week-cell:hover { background: var(--al); }
+/* 일간 */
+.cal-day-view { display: grid; grid-template-columns: 50px 1fr; }
+.cal-day-time { font-size: 9px; color: var(--g3); padding: 2px 5px; border-right: 1px solid var(--border); border-bottom: 1px solid var(--g1); min-height: 40px; }
+.cal-day-cell { border-bottom: 1px solid var(--g1); min-height: 40px; position: relative; cursor: pointer; }
+.cal-day-cell:hover { background: var(--al); }
+.cal-event-block { position: absolute; left: 2px; right: 2px; border-radius: 4px; padding: 2px 5px; font-size: 10px; font-weight: 700; color: #fff; overflow: hidden; cursor: pointer; }
+
+/* 간트 — 뷰 탭 */
+.gantt-view-row { display: flex; align-items: center; gap: 6px; margin-bottom: 10px; }
+.gantt-view-tab { padding: 4px 10px; border: 1px solid var(--border); border-radius: 6px; font-size: 11px; font-weight: 700; cursor: pointer; background: var(--white); color: var(--g4); font-family: inherit; transition: .15s; }
+.gantt-view-tab.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+</style>
+
+<script>
+/* ── 카드 피커 탭 전환 ── */
+function switchPickerCat(cat, btn) {
+  document.querySelectorAll('.picker-cat').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.picker-cat-panel').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelector('.picker-cat-panel[data-cat="'+cat+'"]').classList.add('active');
+}
+
+/* ── 간트차트 뷰 전환 (일/주/월) ── */
+function insertCard_gantt(viewType) {
+  const units = {
+    'day':   { label: '일간', cols: 14, unit: '일', colW: 28 },
+    'week':  { label: '주간', cols: 8,  unit: '주', colW: 40 },
+    'month': { label: '월간', cols: 6,  unit: '월', colW: 60 },
+  };
+  const v = units[viewType] || units['week'];
+  const cid = 'gantt_' + Date.now();
+  const headers = Array.from({length: v.cols}, (_,i) => `<div class="gantt-col-lbl" style="min-width:${v.colW}px">${i+1}${v.unit}</div>`).join('');
+  const COLORS = ['var(--accent)','var(--green)','var(--purple)','var(--yellow)'];
+  const rows = [
+    {task:'기획', who:'-', l:0, w:25, ci:0},
+    {task:'디자인', who:'-', l:25, w:37, ci:1},
+    {task:'개발', who:'-', l:50, w:37, ci:2},
+  ].map(r => `<tr>
+    <td contenteditable>${r.task}</td>
+    <td contenteditable>${r.who}</td>
+    <td class="gantt-bar-cell">
+      <div class="gantt-bar" style="left:${r.l}%;width:${r.w}%;background:${COLORS[r.ci]}" contenteditable>${r.task}</div>
+    </td>
+  </tr>`).join('');
+
+  return `<div class="card-label" contenteditable>간트차트</div>
+  <div class="gantt-view-row">
+    <span style="font-size:11px;font-weight:700;color:var(--g3)">보기:</span>
+    <button class="gantt-view-tab${viewType==='day'?' active':''}" onclick="switchGanttView(this,'day')">일</button>
+    <button class="gantt-view-tab${viewType==='week'?' active':''}" onclick="switchGanttView(this,'week')">주</button>
+    <button class="gantt-view-tab${viewType==='month'?' active':''}" onclick="switchGanttView(this,'month')">월</button>
+    <span class="gantt-view-label" style="font-size:11px;color:var(--g3)">${v.label} 기준</span>
+  </div>
+  <div class="gantt-wrap" id="${cid}">
+    <table class="gantt-table">
+      <thead><tr>
+        <th style="width:110px">작업</th>
+        <th style="width:65px">담당자</th>
+        <th style="padding:0;min-width:${v.cols*v.colW}px">
+          <div style="display:flex">${headers}</div>
+        </th>
+      </tr></thead>
+      <tbody>${rows}</tbody>
+    </table>
+  </div>
+  <button class="add-row-btn edit-only" onclick="addGanttRow(this)">+ 작업 추가</button>`;
+}
+
+function switchGanttView(btn, viewType) {
+  const card = btn.closest('.card');
+  const units = {
+    day:   { label: '일간', cols: 14, unit: '일', colW: 28 },
+    week:  { label: '주간', cols: 8,  unit: '주', colW: 40 },
+    month: { label: '월간', cols: 6,  unit: '월', colW: 60 },
+  };
+  const v = units[viewType];
+  card.querySelectorAll('.gantt-view-tab').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  const lbl = card.querySelector('.gantt-view-label');
+  if (lbl) lbl.textContent = v.label + ' 기준';
+  // 헤더 재생성
+  const th = card.querySelector('.gantt-table thead tr th:last-child');
+  if (th) {
+    th.style.minWidth = (v.cols * v.colW) + 'px';
+    th.innerHTML = `<div style="display:flex">${Array.from({length:v.cols},(_,i)=>`<div class="gantt-col-lbl" style="min-width:${v.colW}px">${i+1}${v.unit}</div>`).join('')}</div>`;
+  }
+}
+
+// insertCard 훅 — gantt-day/week/month, cal-day/week/month
+const _origInsertCard = typeof insertCard === 'function' ? insertCard : null;
+window.insertCard = function(sid, type) {
+  if (type === 'gantt-day' || type === 'gantt-week' || type === 'gantt-month' || type === 'gantt') {
+    const vt = type === 'gantt' ? 'week' : type.replace('gantt-','');
+    const sec = document.getElementById(sid);
+    const btn = sec.querySelector('.add-card-btn');
+    const inner = insertCard_gantt(vt);
+    const wrap = makeCardWrap(inner);
+    if (btn) sec.insertBefore(wrap, btn); else sec.appendChild(wrap);
+    initAllDz && initAllDz(); schedOv && schedOv(); pushHistory('카드 추가: '+type); triggerSave && triggerSave();
+    return;
+  }
+  if (type === 'cal-day' || type === 'cal-week' || type === 'cal-month') {
+    const vt = type.replace('cal-','');
+    const sec = document.getElementById(sid);
+    const btn = sec.querySelector('.add-card-btn');
+    const inner = buildCalendarCard(vt);
+    const wrap = makeCardWrap(inner);
+    if (btn) sec.insertBefore(wrap, btn); else sec.appendChild(wrap);
+    initAllDz && initAllDz(); schedOv && schedOv(); pushHistory('카드 추가: '+type); triggerSave && triggerSave();
+    setTimeout(()=>initCalendar(wrap, vt), 50);
+    return;
+  }
+  if (_origInsertCard) _origInsertCard(sid, type);
+};
+
+/* ── 캘린더 카드 ── */
+function buildCalendarCard(viewType) {
+  const cid = 'cal_' + Date.now();
+  return `<div class="card-label" contenteditable>캘린더</div>
+  <div class="cal-card-wrap" id="${cid}" data-view="${viewType}" data-year="${new Date().getFullYear()}" data-month="${new Date().getMonth()}" data-week="0" data-day="${new Date().getDate()}">
+    <div class="cal-view-tabs">
+      <button class="cal-view-tab${viewType==='day'?' active':''}" onclick="calSwitchView(this,'day')">일</button>
+      <button class="cal-view-tab${viewType==='week'?' active':''}" onclick="calSwitchView(this,'week')">주</button>
+      <button class="cal-view-tab${viewType==='month'?' active':''}" onclick="calSwitchView(this,'month')">월</button>
+    </div>
+    <div class="cal-header">
+      <button class="cal-nav" onclick="calNav(this,-1)">‹</button>
+      <div class="cal-title" id="${cid}-title"></div>
+      <button class="cal-nav" onclick="calNav(this,1)">›</button>
+    </div>
+    <div class="cal-body" id="${cid}-body"></div>
+    <button class="add-row-btn edit-only" onclick="calAddEvent(this)">+ 일정 추가</button>
+  </div>`;
+}
+
+const CAL_EVENT_COLORS = ['#4F6BED','#10B981','#F59E0B','#EF4444','#8B5CF6'];
+function getCalData(wrap) {
+  const cw = wrap.querySelector('.cal-card-wrap');
+  return {
+    cw,
+    year: +cw.dataset.year, month: +cw.dataset.month,
+    week: +cw.dataset.week, day: +cw.dataset.day,
+    view: cw.dataset.view || 'month',
+    events: JSON.parse(cw.dataset.events || '[]'),
+    id: cw.id,
+  };
+}
+
+function renderCal(wrap) {
+  const d = getCalData(wrap);
+  const titleEl = wrap.querySelector('.cal-title, [id$="-title"]');
+  const body = wrap.querySelector('.cal-body, [id$="-body"]');
+  if (!body) return;
+  if (d.view === 'month') renderCalMonth(d, titleEl, body);
+  else if (d.view === 'week') renderCalWeek(d, titleEl, body);
+  else renderCalDay(d, titleEl, body);
+}
+
+function renderCalMonth(d, titleEl, body) {
+  const months = ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'];
+  if (titleEl) titleEl.textContent = d.year + '년 ' + months[d.month];
+  const first = new Date(d.year, d.month, 1).getDay();
+  const days = new Date(d.year, d.month+1, 0).getDate();
+  const today = new Date();
+  let html = '<div class="cal-grid-month">';
+  ['일','월','화','수','목','금','토'].forEach((d2,i) => {
+    html += `<div class="cal-dow${i===0?' sun':i===6?' sat':''}">${d2}</div>`;
+  });
+  for (let i = 0; i < first; i++) {
+    const pd = new Date(d.year, d.month, 0).getDate() - first + i + 1;
+    html += `<div class="cal-day other-month"><div class="cal-day-num">${pd}</div></div>`;
+  }
+  for (let n = 1; n <= days; n++) {
+    const isToday = today.getFullYear()===d.year && today.getMonth()===d.month && today.getDate()===n;
+    const evs = (d.events||[]).filter(e=>e.year===d.year&&e.month===d.month&&e.day===n);
+    html += `<div class="cal-day${isToday?' today':''}" onclick="calDayClick(this,${n})">
+      <div class="cal-day-num">${n}</div>
+      ${evs.map(e=>`<div class="cal-event" style="background:${e.color};color:#fff">${e.title}</div>`).join('')}
+    </div>`;
+  }
+  const remaining = 42 - first - days;
+  for (let i = 1; i <= remaining && remaining < 7; i++) {
+    html += `<div class="cal-day other-month"><div class="cal-day-num">${i}</div></div>`;
+  }
+  html += '</div>';
+  body.innerHTML = html;
+}
+
+function renderCalWeek(d, titleEl, body) {
+  const monday = new Date(d.year, d.month, d.day - new Date(d.year,d.month,d.day).getDay() + 1 + d.week*7);
+  if (titleEl) titleEl.textContent = monday.getMonth()+1 + '월 ' + monday.getDate() + '일 주';
+  const days = Array.from({length:7},(_,i)=>new Date(monday.getTime()+i*86400000));
+  const hours = [9,10,11,12,13,14,15,16,17,18];
+  let html = '<div class="cal-week-grid">';
+  html += '<div class="cal-week-hd"></div>';
+  days.forEach(day => {
+    const dow = ['일','월','화','수','목','금','토'][day.getDay()];
+    html += `<div class="cal-week-hd">${dow} ${day.getDate()}</div>`;
+  });
+  hours.forEach(h => {
+    html += `<div class="cal-week-time">${h}:00</div>`;
+    days.forEach(day => {
+      const evs = (d.events||[]).filter(e=>e.year===day.getFullYear()&&e.month===day.getMonth()&&e.day===day.getDate()&&e.hour===h);
+      html += `<div class="cal-week-cell">${evs.map(e=>`<div class="cal-event-block" style="background:${e.color}">${e.title}</div>`).join('')}</div>`;
+    });
+  });
+  html += '</div>';
+  body.innerHTML = html;
+}
+
+function renderCalDay(d, titleEl, body) {
+  const date = new Date(d.year, d.month, d.day);
+  if (titleEl) titleEl.textContent = (d.month+1) + '월 ' + d.day + '일 (' + ['일','월','화','수','목','금','토'][date.getDay()] + ')';
+  const hours = Array.from({length:15},(_,i)=>i+8);
+  let html = '<div class="cal-day-view">';
+  hours.forEach(h => {
+    const evs = (d.events||[]).filter(e=>e.year===d.year&&e.month===d.month&&e.day===d.day&&e.hour===h);
+    html += `<div class="cal-day-time">${h}:00</div>
+    <div class="cal-day-cell">${evs.map(e=>`<div class="cal-event-block" style="background:${e.color};top:0;bottom:0">${e.title}</div>`).join('')}</div>`;
+  });
+  html += '</div>';
+  body.innerHTML = html;
+}
+
+function calSwitchView(btn, view) {
+  const card = btn.closest('.card');
+  const cw = card.querySelector('.cal-card-wrap');
+  if (!cw) return;
+  cw.dataset.view = view;
+  card.querySelectorAll('.cal-view-tab').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderCal(card);
+}
+
+function calNav(btn, dir) {
+  const card = btn.closest('.card');
+  const cw = card.querySelector('.cal-card-wrap');
+  if (!cw) return;
+  const view = cw.dataset.view;
+  if (view === 'month') {
+    let m = +cw.dataset.month + dir;
+    let y = +cw.dataset.year;
+    if (m < 0) { m = 11; y--; } if (m > 11) { m = 0; y++; }
+    cw.dataset.month = m; cw.dataset.year = y;
+  } else if (view === 'week') {
+    cw.dataset.week = +cw.dataset.week + dir;
+  } else {
+    let day = +cw.dataset.day + dir;
+    const dm = new Date(+cw.dataset.year, +cw.dataset.month, day);
+    cw.dataset.year = dm.getFullYear(); cw.dataset.month = dm.getMonth(); cw.dataset.day = dm.getDate();
+  }
+  renderCal(card);
+}
+
+function calDayClick(el, day) {
+  const cw = el.closest('.cal-card-wrap');
+  if (!cw) return;
+  cw.dataset.day = day;
+  cw.dataset.view = 'day';
+  const card = el.closest('.card');
+  card.querySelectorAll('.cal-view-tab').forEach(b => b.classList.toggle('active', b.textContent==='일'));
+  renderCal(card);
+}
+
+function calAddEvent(btn) {
+  const cw = btn.closest('.cal-card-wrap');
+  if (!cw) return;
+  const title = prompt('일정 제목');
+  if (!title) return;
+  const dateStr = prompt('날짜 (YYYY-MM-DD)', new Date().toISOString().slice(0,10));
+  if (!dateStr) return;
+  const [y,m,d2] = dateStr.split('-').map(Number);
+  const hour = +prompt('시간 (0-23)', '10');
+  const evs = JSON.parse(cw.dataset.events || '[]');
+  evs.push({ title, year: y, month: m-1, day: d2, hour: isNaN(hour)?10:hour, color: CAL_EVENT_COLORS[evs.length % CAL_EVENT_COLORS.length] });
+  cw.dataset.events = JSON.stringify(evs);
+  renderCal(btn.closest('.card'));
+  triggerSave && triggerSave();
+}
+
+function initCalendar(wrap, viewType) {
+  renderCal(wrap);
+}
+
+function initAllCalendars() {
+  document.querySelectorAll('.cal-card-wrap').forEach(cw => renderCal(cw.closest('.card')));
+}
+
+/* ── 참여자 아바타 시스템 ── */
+function initParticipantArea() {
+  const area = document.getElementById('participant-area');
+  if (!area) return;
+
+  // 내 아바타 (가장 오른쪽, Google 스타일 — 항상 표시)
+  let meEl = document.getElementById('p-me');
+  if (!meEl) {
+    meEl = document.createElement('div');
+    meEl.id = 'p-me';
+    meEl.className = 'p-avatar is-me';
+    meEl.onclick = toggleParticipantDropdown;
+    area.appendChild(meEl);
+  }
+  const name = (typeof myUser !== 'undefined' && myUser.name) ? myUser.name : '나';
+  const color = (typeof myUser !== 'undefined' && myUser.color) ? myUser.color : '#4F6BED';
+  meEl.style.background = color;
+  meEl.innerHTML = `<span>${name.charAt(0).toUpperCase()}</span><div class="p-avatar-tip">${name} (나)</div>`;
+
+  // 드롭다운 내 내 정보 업데이트
+  const pdAvatar = document.getElementById('pd-me-avatar');
+  const pdName = document.getElementById('pd-me-name');
+  if (pdAvatar) { pdAvatar.style.background = color; pdAvatar.textContent = name.charAt(0).toUpperCase(); }
+  if (pdName) pdName.textContent = name;
+}
+
+function renderOtherParticipants(presence) {
+  const area = document.getElementById('participant-area');
+  const onlineList = document.getElementById('pd-online-list');
+  if (!area) return;
+
+  // 다른 참여자 아바타 제거 후 재생성
+  area.querySelectorAll('.p-avatar:not(#p-me)').forEach(e => e.remove());
+
+  const now = Date.now();
+  const others = Object.values(presence || {}).filter(u => u.id !== (myUser?.id) && now - u.ts < 30000);
+
+  // 아바타 — 내 아바타 앞에 삽입 (겹쳐 보이게)
+  const meEl = document.getElementById('p-me');
+  others.forEach(u => {
+    const av = document.createElement('div');
+    av.className = 'p-avatar';
+    av.style.background = u.color;
+    av.innerHTML = `<span>${u.name.charAt(0).toUpperCase()}</span><div class="p-avatar-tip">${u.name}</div>`;
+    area.insertBefore(av, meEl);
+  });
+
+  // 드롭다운 온라인 목록
+  if (onlineList) {
+    onlineList.innerHTML = others.length
+      ? others.map(u => `<div class="pd-online-item">
+          <div class="pd-online-dot"></div>
+          <div class="pd-online-avatar" style="background:${u.color}">${u.name.charAt(0).toUpperCase()}</div>
+          <span>${u.name}</span>
+        </div>`).join('')
+      : '<div style="font-size:12px;color:var(--g3)">나 혼자</div>';
+  }
+}
+
+function toggleParticipantDropdown() {
+  document.getElementById('participant-dropdown').classList.toggle('open');
+}
+function closeParticipantDropdown() {
+  document.getElementById('participant-dropdown').classList.remove('open');
+}
+document.addEventListener('click', e => {
+  const dd = document.getElementById('participant-dropdown');
+  if (dd && dd.classList.contains('open') && !e.target.closest('.participant-wrap')) closeParticipantDropdown();
+});
+
+// renderEditors override — 기존 editors-bar 대신 아바타 시스템 사용
+const _origRenderEditors = typeof renderEditors === 'function' ? renderEditors : null;
+window.renderEditors = function(presence) {
+  renderOtherParticipants(presence);
+  if (_origRenderEditors) _origRenderEditors(presence);
+};
+
+// 초기화
+window.addEventListener('load', () => {
+  setTimeout(() => {
+    initParticipantArea();
+    initAllCalendars();
+  }, 400);
+});
+// confirmName/skipName 후에도 아바타 갱신
+const _watchConfirm = setInterval(() => {
+  if (typeof confirmName !== 'undefined') {
+    const orig = window.confirmName;
+    window.confirmName = function() { orig.apply(this, arguments); initParticipantArea(); };
+    const origSkip = window.skipName;
+    window.skipName = function() { origSkip.apply(this, arguments); initParticipantArea(); };
+    clearInterval(_watchConfirm);
+  }
+}, 200);
 </script>
