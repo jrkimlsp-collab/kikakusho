@@ -1127,7 +1127,8 @@ function confirmName() {
   myUser.name = n;
   localStorage.setItem('kiedit-user', JSON.stringify(myUser));
   document.getElementById('name-modal').classList.remove('open');
-  initFirebase();
+  if (!window.fbReady) initFirebase();
+  else { toast('참여자 이름이 변경되었습니다: ' + n); typeof renderParticipants === 'function' && renderParticipants(); }
 }
 
 function skipName() {
@@ -1135,6 +1136,12 @@ function skipName() {
   localStorage.setItem('kiedit-user', JSON.stringify(myUser));
   document.getElementById('name-modal').classList.remove('open');
   initFirebase();
+}
+
+function openNameModal() {
+  const inp = document.getElementById('name-inp');
+  if (inp) inp.value = (myUser && myUser.name !== '익명') ? myUser.name : '';
+  document.getElementById('name-modal').classList.add('open');
 }
 
 // 이름 미설정 시 모달 표시
@@ -1149,6 +1156,7 @@ if (!myUser.name) {
    Firebase 실시간 동기화
 ═══════════════════════════════════════ */
 let fbReady = false;
+window.fbReady = false;
 let remoteVersion = 0;
 let localVersion = 0;
 let isSyncing = false;
@@ -1170,6 +1178,7 @@ function initFirebase() {
     return;
   }
   fbReady = true;
+  window.fbReady = true;
   setSyncStatus('syncing', '연결 중...');
 
   // 문서 실시간 구독
